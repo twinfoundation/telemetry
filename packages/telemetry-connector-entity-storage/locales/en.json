@@ -1,0 +1,12 @@
+{
+	"error": {
+		"entityStorageTelemetryConnector": {
+			"metricNotFound": "The metric could not be found \"{notFoundId}\"",
+			"metricAlreadyExists": "The metric already exists \"{existingId}\"",
+			"metricValueNotFound": "The metric value could not be found \"{notFoundId}\"",
+			"counterIncOnly": "A counter metric can only be incremented",
+			"upDownCounterIncOrDecOnly": "An up/down counter metric can only be incremented or decremented",
+			"gaugeNoIncDec": "A gauge can not be incremented or decremented"
+		}
+	}
+}
