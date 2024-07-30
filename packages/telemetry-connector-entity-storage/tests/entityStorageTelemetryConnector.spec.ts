@@ -167,7 +167,7 @@ describe("EntityStorageTelemetryConnector", () => {
 			{ partitionId: "test" }
 		);
 
-		await telemetry.updateMetricValue("test", "inc", undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
 
 		const entryValueStore = telemetryMetricsValueEntityStorage.getStore("test");
 		expect(entryValueStore?.length).toEqual(1);
@@ -176,7 +176,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		expect(entryValueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(entryValueStore?.[0].value).toEqual(1);
 
-		await telemetry.updateMetricValue("test", 5, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 5, undefined, { partitionId: "test" });
 
 		expect(entryValueStore?.length).toEqual(2);
 		expect(entryValueStore?.[1].id.length).toEqual(32);
@@ -199,7 +199,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		);
 
 		await expect(
-			telemetry.updateMetricValue("test", "dec", undefined, { partitionId: "test" })
+			telemetry.addMetricValue("test", "dec", undefined, { partitionId: "test" })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.counterIncOnly"
@@ -219,7 +219,7 @@ describe("EntityStorageTelemetryConnector", () => {
 			{ partitionId: "test" }
 		);
 
-		await telemetry.updateMetricValue("test", "inc", undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
 
 		const entryValueStore = telemetryMetricsValueEntityStorage.getStore("test");
 		expect(entryValueStore?.length).toEqual(1);
@@ -228,7 +228,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		expect(entryValueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(entryValueStore?.[0].value).toEqual(1);
 
-		await telemetry.updateMetricValue("test", 5, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 5, undefined, { partitionId: "test" });
 
 		expect(entryValueStore?.[1].id.length).toEqual(32);
 		expect(entryValueStore?.[1].metricId).toEqual("test");
@@ -249,7 +249,7 @@ describe("EntityStorageTelemetryConnector", () => {
 			{ partitionId: "test" }
 		);
 
-		await telemetry.updateMetricValue("test", "dec", undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", "dec", undefined, { partitionId: "test" });
 
 		const entryValueStore = telemetryMetricsValueEntityStorage.getStore("test");
 		expect(entryValueStore?.length).toEqual(1);
@@ -258,7 +258,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		expect(entryValueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(entryValueStore?.[0].value).toEqual(-1);
 
-		await telemetry.updateMetricValue("test", -5, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", -5, undefined, { partitionId: "test" });
 
 		expect(entryValueStore?.[1].id.length).toEqual(32);
 		expect(entryValueStore?.[1].metricId).toEqual("test");
@@ -280,7 +280,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		);
 
 		await expect(
-			telemetry.updateMetricValue("test", 5.5, undefined, { partitionId: "test" })
+			telemetry.addMetricValue("test", 5.5, undefined, { partitionId: "test" })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.upDownCounterIncOrDecOnly"
@@ -300,7 +300,7 @@ describe("EntityStorageTelemetryConnector", () => {
 			{ partitionId: "test" }
 		);
 
-		await telemetry.updateMetricValue("test", 11, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 11, undefined, { partitionId: "test" });
 
 		const entryValueStore = telemetryMetricsValueEntityStorage.getStore("test");
 		expect(entryValueStore?.length).toEqual(1);
@@ -309,7 +309,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		expect(entryValueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(entryValueStore?.[0].value).toEqual(11);
 
-		await telemetry.updateMetricValue("test", 12, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 12, undefined, { partitionId: "test" });
 
 		expect(entryValueStore?.[1].id.length).toEqual(32);
 		expect(entryValueStore?.[1].metricId).toEqual("test");
@@ -331,7 +331,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		);
 
 		await expect(
-			telemetry.updateMetricValue("test", "inc", undefined, { partitionId: "test" })
+			telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.gaugeNoIncDec"
@@ -352,7 +352,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		);
 
 		await expect(
-			telemetry.updateMetricValue("test", "dec", undefined, { partitionId: "test" })
+			telemetry.addMetricValue("test", "dec", undefined, { partitionId: "test" })
 		).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.gaugeNoIncDec"
@@ -373,7 +373,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		);
 
 		for (let i = 0; i < 10; i++) {
-			await telemetry.updateMetricValue("test", "inc", undefined, { partitionId: "test" });
+			await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
 		}
 
 		const entryStore = telemetryMetricsEntityStorage.getStore("test");
@@ -468,7 +468,7 @@ describe("EntityStorageTelemetryConnector", () => {
 		);
 
 		for (let i = 0; i < 50; i++) {
-			await telemetry.updateMetricValue("test", "inc", undefined, { partitionId: "test" });
+			await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
 		}
 
 		const entryStore = telemetryMetricsEntityStorage.getStore("test");

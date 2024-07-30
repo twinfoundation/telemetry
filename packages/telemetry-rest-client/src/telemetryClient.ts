@@ -6,6 +6,7 @@ import { Guards, StringHelper } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type {
 	ITelemetry,
+	ITelemetryAddMetricValueRequest,
 	ITelemetryCreateMetricRequest,
 	ITelemetryGetMetricRequest,
 	ITelemetryGetMetricResponse,
@@ -15,7 +16,6 @@ import type {
 	ITelemetryMetricValue,
 	ITelemetryRemoveMetricRequest,
 	ITelemetryUpdateMetricRequest,
-	ITelemetryUpdateMetricValueRequest,
 	ITelemetryValuesListRequest,
 	ITelemetryValuesListResponse,
 	MetricType
@@ -52,7 +52,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	public async createMetric(metric: ITelemetryMetric): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 
-		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/", "POST", {
+		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/metric/", "POST", {
 			body: metric
 		});
 	}
@@ -69,7 +69,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const result = await this.fetch<ITelemetryGetMetricRequest, ITelemetryGetMetricResponse>(
-			"/:id",
+			"/metric/:id",
 			"GET",
 			{
 				pathParams: {
@@ -90,7 +90,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.id), metric.id);
 
-		await this.fetch<ITelemetryUpdateMetricRequest, INoContentResponse>("/:id", "PUT", {
+		await this.fetch<ITelemetryUpdateMetricRequest, INoContentResponse>("/metric/:id", "PUT", {
 			pathParams: {
 				id: metric.id
 			},
@@ -103,29 +103,35 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	}
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
-	 * @param customData The custom data for the update operation.
-	 * @returns Nothing.
+	 * @param value The value for the add operation.
+	 * @param customData The custom data for the add operation.
+	 * @returns The created metric value id.
 	 */
-	public async updateMetricValue(
+	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
 		customData?: { [key: string]: unknown }
-	): Promise<void> {
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		Guards.defined(this.CLASS_NAME, nameof(value), value);
 
-		await this.fetch<ITelemetryUpdateMetricValueRequest, INoContentResponse>("/:id/value", "PUT", {
-			pathParams: {
-				id
-			},
-			body: {
-				value,
-				customData
+		const result = await this.fetch<ITelemetryAddMetricValueRequest, ICreatedResponse>(
+			"/metric/:id/value",
+			"POST",
+			{
+				pathParams: {
+					id
+				},
+				body: {
+					value,
+					customData
+				}
 			}
-		});
+		);
+
+		return result.headers.location;
 	}
 
 	/**
@@ -136,7 +142,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	public async removeMetric(id: string): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
-		await this.fetch<ITelemetryRemoveMetricRequest, INoContentResponse>("/:id", "DELETE", {
+		await this.fetch<ITelemetryRemoveMetricRequest, INoContentResponse>("/metric/:id", "DELETE", {
 			pathParams: {
 				id
 			}
@@ -177,13 +183,17 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		 */
 		totalEntities: number;
 	}> {
-		const result = await this.fetch<ITelemetryListRequest, ITelemetryListResponse>("/", "GET", {
-			query: {
-				type,
-				cursor,
-				pageSize
+		const result = await this.fetch<ITelemetryListRequest, ITelemetryListResponse>(
+			"/metric/",
+			"GET",
+			{
+				query: {
+					type,
+					cursor,
+					pageSize
+				}
 			}
-		});
+		);
 
 		return result.body;
 	}
@@ -230,7 +240,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const result = await this.fetch<ITelemetryValuesListRequest, ITelemetryValuesListResponse>(
-			"/:id/values",
+			"/metric/:id/value",
 			"GET",
 			{
 				pathParams: {

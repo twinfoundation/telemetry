@@ -118,6 +118,16 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		};
 
 		await this._metricStorage.set(entry, requestContext);
+
+		await this._loggingConnector?.log(
+			{
+				source: this.CLASS_NAME,
+				message: "metricCreated",
+				level: "info",
+				data: { id: metric.id, type: metric.type, label: metric.label }
+			},
+			requestContext
+		);
 	}
 
 	/**
@@ -174,22 +184,32 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		};
 
 		await this._metricStorage.set(entry, requestContext);
+
+		await this._loggingConnector?.log(
+			{
+				source: this.CLASS_NAME,
+				message: "metricUpdated",
+				level: "info",
+				data: { id: metric.id, type: metric.type, label: metric.label }
+			},
+			requestContext
+		);
 	}
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
+	 * @param value The value for the add operation.
 	 * @param customData The custom data for the metric value.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async updateMetricValue(
+	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
 		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const existingMetric = await this._metricStorage.get(id, undefined, requestContext);
@@ -212,29 +232,29 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		);
 
 		const lastMetric = existingMetricValue.entities[0];
-		let lastEntryValue = Is.notEmpty(lastMetric) ? (lastMetric.value as number) : 0;
+		let newValue = Is.notEmpty(lastMetric) ? (lastMetric.value as number) : 0;
 
 		const type = Object.values(MetricType)[existingMetric.type];
 		if (type === MetricType.Counter) {
 			if (value === "inc") {
-				lastEntryValue++;
+				newValue++;
 			} else if (Is.integer(value) && value > 0) {
-				lastEntryValue += value;
+				newValue += value;
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "counterIncOnly");
 			}
 		} else if (type === MetricType.IncDecCounter) {
 			if (value === "inc") {
-				lastEntryValue++;
+				newValue++;
 			} else if (value === "dec") {
-				lastEntryValue--;
+				newValue--;
 			} else if (Is.integer(value)) {
-				lastEntryValue += value;
+				newValue += value;
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "upDownCounterIncOrDecOnly");
 			}
 		} else if (Is.number(value)) {
-			lastEntryValue = value;
+			newValue = value;
 		} else {
 			throw new GeneralError(this.CLASS_NAME, "gaugeNoIncDec");
 		}
@@ -243,11 +263,23 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			id: Converter.bytesToHex(RandomHelper.generate(16)),
 			metricId: id,
 			ts: Date.now(),
-			value: lastEntryValue,
+			value: newValue,
 			customData
 		};
 
 		await this._metricValueStorage.set(entryValue, requestContext);
+
+		await this._loggingConnector?.log(
+			{
+				source: this.CLASS_NAME,
+				message: "metricValueCreated",
+				level: "info",
+				data: { id, value: newValue }
+			},
+			requestContext
+		);
+
+		return entryValue.id;
 	}
 
 	/**
@@ -283,6 +315,16 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			);
 			remainingCount = existingMetricValues.totalEntities;
 		} while (remainingCount > 0);
+
+		await this._loggingConnector?.log(
+			{
+				source: this.CLASS_NAME,
+				message: "metricRemoved",
+				level: "info",
+				data: { id }
+			},
+			requestContext
+		);
 	}
 
 	/**

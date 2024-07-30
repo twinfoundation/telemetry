@@ -142,11 +142,11 @@ Nothing.
 
 ***
 
-### updateMetricValue()
+### addMetricValue()
 
-> **updateMetricValue**(`id`, `value`, `customData`?, `requestContext`?): `Promise`\<`void`\>
+> **addMetricValue**(`id`, `value`, `customData`?, `requestContext`?): `Promise`\<`string`\>
 
-Update metric value.
+Add a metric value.
 
 #### Parameters
 
@@ -156,7 +156,7 @@ The id of the metric.
 
 • **value**: `number` \| `"inc"` \| `"dec"`
 
-The value for the update operation.
+The value for the add operation.
 
 • **customData?**
 
@@ -168,13 +168,13 @@ The context for the request.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`string`\>
 
 Nothing.
 
 #### Implementation of
 
-`ITelemetryConnector.updateMetricValue`
+`ITelemetryConnector.addMetricValue`
 
 ***
 

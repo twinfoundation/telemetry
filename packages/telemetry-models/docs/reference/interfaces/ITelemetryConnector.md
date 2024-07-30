@@ -180,9 +180,9 @@ Nothing.
 
 ***
 
-### updateMetricValue()
+### addMetricValue()
 
-> **updateMetricValue**(`id`, `value`, `customData`?, `requestContext`?): `Promise`\<`void`\>
+> **addMetricValue**(`id`, `value`, `customData`?, `requestContext`?): `Promise`\<`string`\>
 
 Update metric value.
 
@@ -206,9 +206,9 @@ The context for the request.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`string`\>
 
-Nothing.
+The created metric value id.
 
 ***
 

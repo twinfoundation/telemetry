@@ -86,22 +86,22 @@ export class TelemetryService implements ITelemetry {
 	}
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
-	 * @param customData The custom data for the update operation.
+	 * @param value The value for the add operation.
+	 * @param customData The custom data for the add operation.
 	 * @param requestContext The context for the request.
-	 * @returns Nothing.
+	 * @returns The created metric value id.
 	 */
-	public async updateMetricValue(
+	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
 		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		Guards.defined(this.CLASS_NAME, nameof(value), value);
-		return this._telemetryConnector.updateMetricValue(id, value, customData, requestContext);
+		return this._telemetryConnector.addMetricValue(id, value, customData, requestContext);
 	}
 
 	/**

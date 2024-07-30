@@ -1,8 +1,8 @@
-# Function: telemetryCreateMetric()
+# Function: telemetryAddMetricValue()
 
-> **telemetryCreateMetric**(`requestContext`, `factoryServiceName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **telemetryAddMetricValue**(`requestContext`, `factoryServiceName`, `request`): `Promise`\<`ICreatedResponse`\>
 
-Create a new telemetry metric.
+Add a telemetry metric value.
 
 ## Parameters
 
@@ -14,7 +14,7 @@ The request context for the API.
 
 The name of the service to use in the routes.
 
-• **request**: `ITelemetryCreateMetricRequest`
+• **request**: `ITelemetryAddMetricValueRequest`
 
 The request.
 

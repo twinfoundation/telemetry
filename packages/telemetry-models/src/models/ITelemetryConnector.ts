@@ -48,14 +48,14 @@ export interface ITelemetryConnector extends IService {
 	 * @param value The value for the update operation.
 	 * @param customData The custom data for the update operation.
 	 * @param requestContext The context for the request.
-	 * @returns Nothing.
+	 * @returns The created metric value id.
 	 */
-	updateMetricValue(
+	addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
 		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
-	): Promise<void>;
+	): Promise<string>;
 
 	/**
 	 * Remove metric.

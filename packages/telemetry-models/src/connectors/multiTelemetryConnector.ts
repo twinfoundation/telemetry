@@ -103,26 +103,28 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 	}
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
-	 * @param customData The custom data for the update operation.
+	 * @param value The value for the add operation.
+	 * @param customData The custom data for the add operation.
 	 * @param requestContext The context for the request.
-	 * @returns Nothing.
+	 * @returns The created metric value id.
 	 */
-	public async updateMetricValue(
+	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
 		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
-		await Promise.allSettled(
+		const results = await Promise.allSettled(
 			this._telemetryConnectors.map(async telemetryConnector =>
-				telemetryConnector.updateMetricValue(id, value, customData, requestContext)
+				telemetryConnector.addMetricValue(id, value, customData, requestContext)
 			)
 		);
+
+		return results[0].status === "fulfilled" ? results[0].value : "";
 	}
 
 	/**

@@ -43,19 +43,19 @@ export interface ITelemetry extends IService {
 	): Promise<void>;
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
-	 * @param customData The custom data for the update operation.
+	 * @param value The value for the add operation.
+	 * @param customData The custom data for the add operation.
 	 * @param requestContext The context for the request.
-	 * @returns Nothing.
+	 * @returns The created metric value id.
 	 */
-	updateMetricValue(
+	addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
 		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
-	): Promise<void>;
+	): Promise<string>;
 
 	/**
 	 * Remove metric.

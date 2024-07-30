@@ -15,7 +15,7 @@
 - [telemetryCreateMetric](functions/telemetryCreateMetric.md)
 - [telemetryGetMetric](functions/telemetryGetMetric.md)
 - [telemetryUpdateMetric](functions/telemetryUpdateMetric.md)
-- [telemetryUpdateMetricValue](functions/telemetryUpdateMetricValue.md)
+- [telemetryAddMetricValue](functions/telemetryAddMetricValue.md)
 - [telemetryRemoveMetric](functions/telemetryRemoveMetric.md)
 - [telemetryMetricList](functions/telemetryMetricList.md)
 - [telemetryMetricValueList](functions/telemetryMetricValueList.md)

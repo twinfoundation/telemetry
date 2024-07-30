@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Update a telemetry entry.
+ * Add a telemetry metric value.
  */
-export interface ITelemetryUpdateMetricValueRequest {
+export interface ITelemetryAddMetricValueRequest {
 	/**
 	 * The path parameters.
 	 */

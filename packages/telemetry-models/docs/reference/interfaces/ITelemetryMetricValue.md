@@ -4,6 +4,14 @@ Interface describing a telemetry metric value.
 
 ## Properties
 
+### id
+
+> **id**: `string`
+
+The id of the metric value.
+
+***
+
 ### ts
 
 > **ts**: `number`

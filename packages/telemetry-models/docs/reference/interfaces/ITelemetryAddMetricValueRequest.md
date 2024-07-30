@@ -1,6 +1,6 @@
-# Interface: ITelemetryUpdateMetricValueRequest
+# Interface: ITelemetryAddMetricValueRequest
 
-Update a telemetry entry.
+Add a telemetry metric value.
 
 ## Properties
 
