@@ -1,16 +1,16 @@
-# Class: TelemetryMetricEntry
+# Class: TelemetryMetric
 
-Call defining a telemetry metric entry.
+Call defining a telemetry metric.
 
 ## Constructors
 
-### new TelemetryMetricEntry()
+### new TelemetryMetric()
 
-> **new TelemetryMetricEntry**(): [`TelemetryMetricEntry`](TelemetryMetricEntry.md)
+> **new TelemetryMetric**(): [`TelemetryMetric`](TelemetryMetric.md)
 
 #### Returns
 
-[`TelemetryMetricEntry`](TelemetryMetricEntry.md)
+[`TelemetryMetric`](TelemetryMetric.md)
 
 ## Properties
 

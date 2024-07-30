@@ -3,7 +3,7 @@
 import type { ITelemetryMetric } from "../ITelemetryMetric";
 
 /**
- * Create a new telemetry entry.
+ * Create a new telemetry metric.
  */
 export interface ITelemetryCreateMetricRequest {
 	/**

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Remove a telemetry entry and it's values.
+ * Remove a telemetry metric and it's values.
  */
 export interface ITelemetryRemoveMetricRequest {
 	/**

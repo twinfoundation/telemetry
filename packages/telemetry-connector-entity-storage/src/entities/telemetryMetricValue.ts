@@ -3,37 +3,37 @@
 import { entity, property } from "@gtsc/entity";
 
 /**
- * Call defining a telemetry metric entry.
+ * Call defining a telemetry metric value.
  */
 @entity()
-export class TelemetryMetricEntry {
+export class TelemetryMetricValue {
 	/**
-	 * The id.
+	 * The value id.
 	 */
 	@property({ type: "string", isPrimary: true })
 	public id!: string;
 
 	/**
-	 * The label.
+	 * The metric id.
 	 */
 	@property({ type: "string" })
-	public label!: string;
+	public metricId!: string;
 
 	/**
-	 * The type of the metric.
+	 * The timestamp.
 	 */
 	@property({ type: "integer" })
-	public type!: number;
+	public ts!: number;
 
 	/**
-	 * The unit.
+	 * The value of the metric.
 	 */
 	@property({ type: "string" })
-	public unit!: string;
+	public value!: number;
 
 	/**
-	 * The description.
+	 * The custom data for the metric value.
 	 */
-	@property({ type: "string" })
-	public description!: string;
+	@property({ type: "object" })
+	public customData?: { [key: string]: unknown };
 }

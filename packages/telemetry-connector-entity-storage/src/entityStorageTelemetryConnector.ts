@@ -28,8 +28,8 @@ import {
 	type ITelemetryMetricValue,
 	MetricType
 } from "@gtsc/telemetry-models";
-import type { TelemetryMetricEntry } from "./entities/telemetryMetricEntry";
-import type { TelemetryMetricValueEntry } from "./entities/telemetryMetricValueEntry";
+import type { TelemetryMetric } from "./entities/telemetryMetric";
+import type { TelemetryMetricValue } from "./entities/telemetryMetricValue";
 
 /**
  * Class for performing telemetry operations in entity storage.
@@ -46,16 +46,16 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	public readonly CLASS_NAME: string = nameof<EntityStorageTelemetryConnector>();
 
 	/**
-	 * The entity storage for the telemetry entries.
+	 * The entity storage for the telemetry metrics.
 	 * @internal
 	 */
-	private readonly _metricStorage: IEntityStorageConnector<TelemetryMetricEntry>;
+	private readonly _metricStorage: IEntityStorageConnector<TelemetryMetric>;
 
 	/**
-	 * The entity storage for the telemetry entry values.
+	 * The entity storage for the telemetry metric values.
 	 * @internal
 	 */
-	private readonly _metricValueStorage: IEntityStorageConnector<TelemetryMetricValueEntry>;
+	private readonly _metricValueStorage: IEntityStorageConnector<TelemetryMetricValue>;
 
 	/**
 	 * The connector for logging.
@@ -114,7 +114,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			throw new AlreadyExistsError(this.CLASS_NAME, "metricAlreadyExists", metric.id);
 		}
 
-		const entry: TelemetryMetricEntry = {
+		const telemetryMetric: TelemetryMetric = {
 			id: metric.id,
 			label: metric.label,
 			type: Object.values(MetricType).indexOf(metric.type),
@@ -122,7 +122,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			description: metric.description ?? ""
 		};
 
-		await this._metricStorage.set(entry, requestContext);
+		await this._metricStorage.set(telemetryMetric, requestContext);
 
 		await this._loggingConnector?.log(
 			{
@@ -180,7 +180,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			throw new NotFoundError(this.CLASS_NAME, "metricNotFound", metric.id);
 		}
 
-		const entry: TelemetryMetricEntry = {
+		const telemetryMetric: TelemetryMetric = {
 			id: metric.id,
 			label: metric.label,
 			type: existingMetric.type,
@@ -188,7 +188,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			description: metric.description ?? existingMetric.description
 		};
 
-		await this._metricStorage.set(entry, requestContext);
+		await this._metricStorage.set(telemetryMetric, requestContext);
 
 		await this._loggingConnector?.log(
 			{
@@ -264,7 +264,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			throw new GeneralError(this.CLASS_NAME, "gaugeNoIncDec");
 		}
 
-		const entryValue: TelemetryMetricValueEntry = {
+		const telemetryMetricValue: TelemetryMetricValue = {
 			id: Converter.bytesToHex(RandomHelper.generate(16)),
 			metricId: id,
 			ts: Date.now(),
@@ -272,7 +272,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			customData
 		};
 
-		await this._metricValueStorage.set(entryValue, requestContext);
+		await this._metricValueStorage.set(telemetryMetricValue, requestContext);
 
 		await this._loggingConnector?.log(
 			{
@@ -284,7 +284,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			requestContext
 		);
 
-		return entryValue.id;
+		return telemetryMetricValue.id;
 	}
 
 	/**
@@ -314,8 +314,11 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 				requestContext
 			);
 			await Promise.allSettled(
-				existingMetricValues.entities.map(async entry => {
-					this._metricValueStorage.remove((entry as TelemetryMetricValueEntry).id, requestContext);
+				existingMetricValues.entities.map(async telemetryMetricValue => {
+					this._metricValueStorage.remove(
+						(telemetryMetricValue as TelemetryMetricValue).id,
+						requestContext
+					);
 				})
 			);
 			remainingCount = existingMetricValues.totalEntities;
@@ -370,7 +373,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	}> {
 		const metricTypes: MetricType[] = Object.values(MetricType);
 
-		const condition: EntityCondition<TelemetryMetricEntry> = {
+		const condition: EntityCondition<TelemetryMetric> = {
 			conditions: [],
 			logicalOperator: LogicalOperator.And
 		};
@@ -463,7 +466,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			throw new NotFoundError(this.CLASS_NAME, "metricNotFound", id);
 		}
 
-		const condition: EntityCondition<TelemetryMetricValueEntry> = {
+		const condition: EntityCondition<TelemetryMetricValue> = {
 			conditions: [],
 			logicalOperator: LogicalOperator.And
 		};
@@ -511,7 +514,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 				...existingMetric,
 				type: types[existingMetric.type as number]
 			},
-			entities: result.entities as TelemetryMetricValueEntry[],
+			entities: result.entities as TelemetryMetricValue[],
 			cursor: result.cursor,
 			pageSize: result.pageSize,
 			totalEntities: result.totalEntities
