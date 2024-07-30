@@ -29,3 +29,13 @@ The data to be used in the update.
 > **value**: `number` \| `"inc"` \| `"dec"`
 
 The value for the update operation.
+
+#### customData?
+
+> `optional` **customData**: `object`
+
+The custom data for the update operation.
+
+##### Index signature
+
+ \[`key`: `string`\]: `unknown`

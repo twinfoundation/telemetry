@@ -104,7 +104,7 @@ The response.
 
 ### createMetric()
 
-> **createMetric**(`metric`, `initialValue`?): `Promise`\<`void`\>
+> **createMetric**(`metric`): `Promise`\<`void`\>
 
 Create a new metric.
 
@@ -113,10 +113,6 @@ Create a new metric.
 • **metric**: `ITelemetryMetric`
 
 The metric details.
-
-• **initialValue?**: `number`
-
-The initial value of the metric.
 
 #### Returns
 
@@ -188,7 +184,7 @@ Nothing.
 
 ### updateMetricValue()
 
-> **updateMetricValue**(`id`, `value`): `Promise`\<`void`\>
+> **updateMetricValue**(`id`, `value`, `customData`?): `Promise`\<`void`\>
 
 Update metric value.
 
@@ -201,6 +197,10 @@ The id of the metric.
 • **value**: `number` \| `"inc"` \| `"dec"`
 
 The value for the update operation.
+
+• **customData?**
+
+The custom data for the update operation.
 
 #### Returns
 

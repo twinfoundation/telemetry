@@ -85,13 +85,11 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	public async createMetric(
 		metric: ITelemetryMetric,
-		initialValue?: number,
 		requestContext?: IServiceRequestContext
 	): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
@@ -104,14 +102,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		}
 		if (Is.notEmpty(metric.unit)) {
 			Guards.string(this.CLASS_NAME, nameof(metric.unit), metric.unit);
-		}
-
-		if (Is.notEmpty(initialValue)) {
-			if (metric.type === MetricType.Counter || metric.type === MetricType.IncDecCounter) {
-				Guards.integer(this.CLASS_NAME, nameof(initialValue), initialValue);
-			} else {
-				Guards.number(this.CLASS_NAME, nameof(initialValue), initialValue);
-			}
 		}
 
 		const existingMetric = await this._metricStorage.get(metric.id, undefined, requestContext);
@@ -128,15 +118,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		};
 
 		await this._metricStorage.set(entry, requestContext);
-
-		const entryValue: TelemetryMetricValueEntry = {
-			id: Converter.bytesToHex(RandomHelper.generate(16)),
-			metricId: metric.id,
-			ts: Date.now(),
-			value: initialValue ?? 0
-		};
-
-		await this._metricValueStorage.set(entryValue, requestContext);
 	}
 
 	/**
@@ -199,12 +180,14 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	 * Update metric value.
 	 * @param id The id of the metric.
 	 * @param value The value for the update operation.
+	 * @param customData The custom data for the metric value.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	public async updateMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
+		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
 	): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
@@ -228,16 +211,15 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			requestContext
 		);
 
-		if (!Is.arrayValue(existingMetricValue.entities)) {
-			throw new NotFoundError(this.CLASS_NAME, "metricValueNotFound", id);
-		}
-
-		let lastEntryValue = existingMetricValue.entities[0].value as number;
+		const lastMetric = existingMetricValue.entities[0];
+		let lastEntryValue = Is.notEmpty(lastMetric) ? (lastMetric.value as number) : 0;
 
 		const type = Object.values(MetricType)[existingMetric.type];
 		if (type === MetricType.Counter) {
 			if (value === "inc") {
 				lastEntryValue++;
+			} else if (Is.integer(value) && value > 0) {
+				lastEntryValue += value;
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "counterIncOnly");
 			}
@@ -246,6 +228,8 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 				lastEntryValue++;
 			} else if (value === "dec") {
 				lastEntryValue--;
+			} else if (Is.integer(value)) {
+				lastEntryValue += value;
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "upDownCounterIncOrDecOnly");
 			}
@@ -259,7 +243,8 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			id: Converter.bytesToHex(RandomHelper.generate(16)),
 			metricId: id,
 			ts: Date.now(),
-			value: lastEntryValue
+			value: lastEntryValue,
+			customData
 		};
 
 		await this._metricValueStorage.set(entryValue, requestContext);
@@ -351,8 +336,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			});
 		}
 
-		console.log(condition);
-
 		const result = await this._metricStorage.query(
 			condition.conditions.length > 0 ? condition : undefined,
 			[
@@ -366,8 +349,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			pageSize,
 			requestContext
 		);
-
-		console.log(result);
 
 		return {
 			entities: result.entities.map(

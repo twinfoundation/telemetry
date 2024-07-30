@@ -52,7 +52,7 @@ The connectors to send the telemetry entries to.
 
 ### createMetric()
 
-> **createMetric**(`metric`, `initialValue`?, `requestContext`?): `Promise`\<`void`\>
+> **createMetric**(`metric`, `requestContext`?): `Promise`\<`void`\>
 
 Create a new metric.
 
@@ -61,10 +61,6 @@ Create a new metric.
 • **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
 
 The metric details.
-
-• **initialValue?**: `number`
-
-The initial value of the metric.
 
 • **requestContext?**: `IServiceRequestContext`
 
@@ -148,7 +144,7 @@ Nothing.
 
 ### updateMetricValue()
 
-> **updateMetricValue**(`id`, `value`, `requestContext`?): `Promise`\<`void`\>
+> **updateMetricValue**(`id`, `value`, `customData`?, `requestContext`?): `Promise`\<`void`\>
 
 Update metric value.
 
@@ -161,6 +157,10 @@ The id of the metric.
 • **value**: `number` \| `"inc"` \| `"dec"`
 
 The value for the update operation.
+
+• **customData?**
+
+The custom data for the update operation.
 
 • **requestContext?**: `IServiceRequestContext`
 

@@ -41,18 +41,16 @@ export class TelemetryService implements ITelemetry {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	public async createMetric(
 		metric: ITelemetryMetric,
-		initialValue?: number,
 		requestContext?: IServiceRequestContext
 	): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 
-		await this._telemetryConnector.createMetric(metric, initialValue, requestContext);
+		await this._telemetryConnector.createMetric(metric, requestContext);
 	}
 
 	/**
@@ -91,17 +89,19 @@ export class TelemetryService implements ITelemetry {
 	 * Update metric value.
 	 * @param id The id of the metric.
 	 * @param value The value for the update operation.
+	 * @param customData The custom data for the update operation.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	public async updateMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
+		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
 	): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		Guards.defined(this.CLASS_NAME, nameof(value), value);
-		return this._telemetryConnector.updateMetricValue(id, value, requestContext);
+		return this._telemetryConnector.updateMetricValue(id, value, customData, requestContext);
 	}
 
 	/**

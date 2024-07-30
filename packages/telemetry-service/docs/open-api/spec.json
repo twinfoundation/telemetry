@@ -101,7 +101,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/TelemetryCreateMetricRequest"
+                                "$ref": "#/components/schemas/TelemetryMetric"
                             },
                             "examples": {
                                 "telemetryCreateMetricExample": {
@@ -109,7 +109,7 @@
                                         "id": "my-counter",
                                         "label": "My Counter",
                                         "description": "This is my counter",
-                                        "type": 0,
+                                        "type": "Counter",
                                         "unit": "KG"
                                     }
                                 }
@@ -130,7 +130,8 @@
                         "description": "The type of the metric.",
                         "in": "query",
                         "required": false,
-                        "schema": {}
+                        "schema": {},
+                        "example": "Counter"
                     },
                     {
                         "name": "cursor",
@@ -171,7 +172,7 @@
                                                 {
                                                     "id": "my-counter",
                                                     "label": "My Counter",
-                                                    "type": 0,
+                                                    "type": "Counter",
                                                     "unit": "KG"
                                                 }
                                             ],
@@ -319,7 +320,7 @@
                                             "metric": {
                                                 "id": "my-counter",
                                                 "label": "My Counter",
-                                                "type": 0,
+                                                "type": "Counter",
                                                 "unit": "KG"
                                             },
                                             "entities": [
@@ -734,78 +735,6 @@
                 "additionalProperties": false,
                 "description": "Model to describe serialized error."
             },
-            "TelemetryCreateMetricRequest": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "The id of the metric."
-                    },
-                    "label": {
-                        "type": "string",
-                        "description": "The label of the metric."
-                    },
-                    "type": {
-                        "$ref": "#/components/schemas/MetricType"
-                    },
-                    "description": {
-                        "type": "string",
-                        "description": "The description of the metric."
-                    },
-                    "unit": {
-                        "type": "string",
-                        "description": "The unit of the metric."
-                    },
-                    "initialValue": {
-                        "type": "number",
-                        "description": "The initial value of the metric."
-                    }
-                },
-                "required": [
-                    "id",
-                    "label",
-                    "type"
-                ],
-                "additionalProperties": false,
-                "description": "The data to be used in the create."
-            },
-            "MetricType": {
-                "anyOf": [
-                    {
-                        "type": "number",
-                        "const": 0,
-                        "description": "Counter."
-                    },
-                    {
-                        "type": "number",
-                        "const": 1,
-                        "description": "Increment Decrement Counter."
-                    },
-                    {
-                        "type": "number",
-                        "const": 2,
-                        "description": "Gauge."
-                    }
-                ],
-                "description": "The types of metrics."
-            },
-            "TelemetryGetMetricResponse": {
-                "type": "object",
-                "properties": {
-                    "metric": {
-                        "$ref": "#/components/schemas/TelemetryMetric"
-                    },
-                    "value": {
-                        "$ref": "#/components/schemas/TelemetryMetricValue"
-                    }
-                },
-                "required": [
-                    "metric",
-                    "value"
-                ],
-                "additionalProperties": false,
-                "description": "The body parameters."
-            },
             "TelemetryMetric": {
                 "type": "object",
                 "properties": {
@@ -837,6 +766,43 @@
                 "additionalProperties": false,
                 "description": "Interface describing a telemetry metric."
             },
+            "MetricType": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "const": "Counter",
+                        "description": "Counter."
+                    },
+                    {
+                        "type": "string",
+                        "const": "IncDecCounter",
+                        "description": "Increment Decrement Counter."
+                    },
+                    {
+                        "type": "string",
+                        "const": "Gauge",
+                        "description": "Gauge."
+                    }
+                ],
+                "description": "The types of metrics."
+            },
+            "TelemetryGetMetricResponse": {
+                "type": "object",
+                "properties": {
+                    "metric": {
+                        "$ref": "#/components/schemas/TelemetryMetric"
+                    },
+                    "value": {
+                        "$ref": "#/components/schemas/TelemetryMetricValue"
+                    }
+                },
+                "required": [
+                    "metric",
+                    "value"
+                ],
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
             "TelemetryMetricValue": {
                 "type": "object",
                 "properties": {
@@ -847,6 +813,11 @@
                     "value": {
                         "type": "number",
                         "description": "The value of the metric."
+                    },
+                    "customData": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "description": "The custom data for the metric value."
                     }
                 },
                 "required": [
@@ -896,6 +867,11 @@
                             }
                         ],
                         "description": "The value for the update operation."
+                    },
+                    "customData": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "description": "The custom data for the update operation."
                     }
                 },
                 "required": [

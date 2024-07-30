@@ -17,3 +17,15 @@ The timestamp of the metric.
 > **value**: `number`
 
 The value of the metric.
+
+***
+
+### customData?
+
+> `optional` **customData**: `object`
+
+The custom data for the metric value.
+
+#### Index signature
+
+ \[`key`: `string`\]: `unknown`

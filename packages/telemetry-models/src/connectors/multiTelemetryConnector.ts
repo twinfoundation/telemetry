@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseError, Guards, Is, NotImplementedError } from "@gtsc/core";
+import { BaseError, Guards, NotImplementedError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type { IServiceRequestContext } from "@gtsc/services";
 import { TelemetryConnectorFactory } from "../factories/telemetryConnectorFactory";
@@ -43,13 +43,11 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	public async createMetric(
 		metric: ITelemetryMetric,
-		initialValue?: number,
 		requestContext?: IServiceRequestContext
 	): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
@@ -57,13 +55,9 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.label), metric.label);
 		Guards.arrayOneOf(this.CLASS_NAME, nameof(metric.type), metric.type, Object.values(MetricType));
 
-		if (Is.notEmpty(initialValue)) {
-			Guards.number(this.CLASS_NAME, nameof(initialValue), initialValue);
-		}
-
 		await Promise.allSettled(
 			this._telemetryConnectors.map(async telemetryConnector =>
-				telemetryConnector.createMetric(metric, initialValue, requestContext)
+				telemetryConnector.createMetric(metric, requestContext)
 			)
 		);
 	}
@@ -112,19 +106,21 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 	 * Update metric value.
 	 * @param id The id of the metric.
 	 * @param value The value for the update operation.
+	 * @param customData The custom data for the update operation.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	public async updateMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
+		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
 	): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		await Promise.allSettled(
 			this._telemetryConnectors.map(async telemetryConnector =>
-				telemetryConnector.updateMetricValue(id, value, requestContext)
+				telemetryConnector.updateMetricValue(id, value, customData, requestContext)
 			)
 		);
 	}

@@ -12,15 +12,10 @@ export interface ITelemetry extends IService {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	createMetric(
-		metric: ITelemetryMetric,
-		initialValue?: number,
-		requestContext?: IServiceRequestContext
-	): Promise<void>;
+	createMetric(metric: ITelemetryMetric, requestContext?: IServiceRequestContext): Promise<void>;
 
 	/**
 	 * Get the metric details and it's most recent value.
@@ -51,12 +46,14 @@ export interface ITelemetry extends IService {
 	 * Update metric value.
 	 * @param id The id of the metric.
 	 * @param value The value for the update operation.
+	 * @param customData The custom data for the update operation.
 	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
 	updateMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
+		customData?: { [key: string]: unknown },
 		requestContext?: IServiceRequestContext
 	): Promise<void>;
 

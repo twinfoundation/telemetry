@@ -1,20 +1,40 @@
-# Class: SilentTelemetryConnector
+# Class: EntityStorageTelemetryConnector
 
-Class for performing telemetry operations to nowhere.
+Class for performing telemetry operations in entity storage.
 
 ## Implements
 
-- [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md)
+- `ITelemetryConnector`
 
 ## Constructors
 
-### new SilentTelemetryConnector()
+### new EntityStorageTelemetryConnector()
 
-> **new SilentTelemetryConnector**(): [`SilentTelemetryConnector`](SilentTelemetryConnector.md)
+> **new EntityStorageTelemetryConnector**(`options`?): [`EntityStorageTelemetryConnector`](EntityStorageTelemetryConnector.md)
+
+Create a new instance of EntityStorageTelemetryConnector.
+
+#### Parameters
+
+• **options?**
+
+The options for the connector.
+
+• **options.telemetryMetricStorageConnectorType?**: `string`
+
+The type of the entity storage connector to use, defaults to "telemetry-metric".
+
+• **options.telemetryMetricValueStorageConnectorType?**: `string`
+
+The type of the entity storage connector to use, defaults to "telemetry-metric-value".
+
+• **options.loggingConnectorType?**: `string`
+
+The type of the logging connector to use, can be undefined for no logging.
 
 #### Returns
 
-[`SilentTelemetryConnector`](SilentTelemetryConnector.md)
+[`EntityStorageTelemetryConnector`](EntityStorageTelemetryConnector.md)
 
 ## Properties
 
@@ -26,7 +46,7 @@ Runtime name for the class.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`CLASS_NAME`](../interfaces/ITelemetryConnector.md#class_name)
+`ITelemetryConnector.CLASS_NAME`
 
 ## Methods
 
@@ -38,7 +58,7 @@ Create a new metric.
 
 #### Parameters
 
-• **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
+• **metric**: `ITelemetryMetric`
 
 The metric details.
 
@@ -54,7 +74,7 @@ Nothing.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`createMetric`](../interfaces/ITelemetryConnector.md#createmetric)
+`ITelemetryConnector.createMetric`
 
 ***
 
@@ -82,15 +102,15 @@ The metric details and it's most recent value.
 
 ##### metric
 
-> **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
+> **metric**: `ITelemetryMetric`
 
 ##### value
 
-> **value**: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md)
+> **value**: `ITelemetryMetricValue`
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`getMetric`](../interfaces/ITelemetryConnector.md#getmetric)
+`ITelemetryConnector.getMetric`
 
 ***
 
@@ -102,7 +122,7 @@ Update metric.
 
 #### Parameters
 
-• **metric**: `Omit`\<[`ITelemetryMetric`](../interfaces/ITelemetryMetric.md), `"type"`\>
+• **metric**: `Omit`\<`ITelemetryMetric`, `"type"`\>
 
 The metric details.
 
@@ -118,7 +138,7 @@ Nothing.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`updateMetric`](../interfaces/ITelemetryConnector.md#updatemetric)
+`ITelemetryConnector.updateMetric`
 
 ***
 
@@ -140,7 +160,7 @@ The value for the update operation.
 
 • **customData?**
 
-The custom data for the update operation.
+The custom data for the metric value.
 
 • **requestContext?**: `IServiceRequestContext`
 
@@ -154,7 +174,7 @@ Nothing.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`updateMetricValue`](../interfaces/ITelemetryConnector.md#updatemetricvalue)
+`ITelemetryConnector.updateMetricValue`
 
 ***
 
@@ -182,7 +202,7 @@ Nothing.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`removeMetric`](../interfaces/ITelemetryConnector.md#removemetric)
+`ITelemetryConnector.removeMetric`
 
 ***
 
@@ -194,7 +214,7 @@ Query the metrics.
 
 #### Parameters
 
-• **type?**: [`MetricType`](../type-aliases/MetricType.md)
+• **type?**: `MetricType`
 
 The type of the metric.
 
@@ -219,7 +239,7 @@ and a cursor which can be used to request more entities.
 
 ##### entities
 
-> **entities**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)[]
+> **entities**: `ITelemetryMetric`[]
 
 The metrics.
 
@@ -243,7 +263,7 @@ Total entities length.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`query`](../interfaces/ITelemetryConnector.md#query)
+`ITelemetryConnector.query`
 
 #### Throws
 
@@ -255,7 +275,7 @@ NotImplementedError if the implementation does not support retrieval.
 
 > **queryValues**(`id`, `timeStart`?, `timeEnd`?, `cursor`?, `pageSize`?, `requestContext`?): `Promise`\<`object`\>
 
-Query the metric values.
+Query the metrics.
 
 #### Parameters
 
@@ -292,13 +312,13 @@ and a cursor which can be used to request more entities.
 
 ##### metric
 
-> **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
+> **metric**: `ITelemetryMetric`
 
 The metric details.
 
 ##### entities
 
-> **entities**: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md)[]
+> **entities**: `ITelemetryMetricValue`[]
 
 The values for the metric.
 
@@ -322,7 +342,7 @@ Total entities length.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`queryValues`](../interfaces/ITelemetryConnector.md#queryvalues)
+`ITelemetryConnector.queryValues`
 
 #### Throws
 

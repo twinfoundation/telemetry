@@ -47,17 +47,13 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
 	 * @returns Nothing.
 	 */
-	public async createMetric(metric: ITelemetryMetric, initialValue?: number): Promise<void> {
+	public async createMetric(metric: ITelemetryMetric): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 
 		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/", "POST", {
-			body: {
-				...metric,
-				initialValue
-			}
+			body: metric
 		});
 	}
 
@@ -110,9 +106,14 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	 * Update metric value.
 	 * @param id The id of the metric.
 	 * @param value The value for the update operation.
+	 * @param customData The custom data for the update operation.
 	 * @returns Nothing.
 	 */
-	public async updateMetricValue(id: string, value: "inc" | "dec" | number): Promise<void> {
+	public async updateMetricValue(
+		id: string,
+		value: "inc" | "dec" | number,
+		customData?: { [key: string]: unknown }
+	): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		Guards.defined(this.CLASS_NAME, nameof(value), value);
 
@@ -121,7 +122,8 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 				id
 			},
 			body: {
-				value
+				value,
+				customData
 			}
 		});
 	}

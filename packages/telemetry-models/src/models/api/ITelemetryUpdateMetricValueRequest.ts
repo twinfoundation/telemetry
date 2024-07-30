@@ -23,5 +23,10 @@ export interface ITelemetryUpdateMetricValueRequest {
 		 * The value for the update operation.
 		 */
 		value: "inc" | "dec" | number;
+
+		/**
+		 * The custom data for the update operation.
+		 */
+		customData?: { [key: string]: unknown };
 	};
 }

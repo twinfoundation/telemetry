@@ -30,4 +30,10 @@ export class TelemetryMetricValueEntry {
 	 */
 	@property({ type: "string" })
 	public value!: number;
+
+	/**
+	 * The custom data for the metric value.
+	 */
+	@property({ type: "object" })
+	public customData?: { [key: string]: unknown };
 }

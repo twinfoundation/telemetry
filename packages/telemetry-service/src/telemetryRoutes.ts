@@ -338,7 +338,6 @@ export async function telemetryCreateMetric(
 			type: request.body.type,
 			unit: request.body.unit
 		},
-		request.body.initialValue,
 		requestContext
 	);
 	return {
@@ -436,7 +435,12 @@ export async function telemetryUpdateMetricValue(
 	);
 
 	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
-	await service.updateMetricValue(request.pathParams.id, request.body.value, requestContext);
+	await service.updateMetricValue(
+		request.pathParams.id,
+		request.body.value,
+		request.body.customData,
+		requestContext
+	);
 
 	return { statusCode: HttpStatusCode.noContent };
 }
