@@ -38,6 +38,14 @@ The type of the logging connector to use, can be undefined for no logging.
 
 ## Properties
 
+### NAMESPACE
+
+> `static` `readonly` **NAMESPACE**: `string` = `"entity-storage"`
+
+The namespace supported by the telemetry connector.
+
+***
+
 ### CLASS\_NAME
 
 > `readonly` **CLASS\_NAME**: `string`

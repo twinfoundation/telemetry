@@ -36,6 +36,11 @@ import type { TelemetryMetricValueEntry } from "./entities/telemetryMetricValueE
  */
 export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	/**
+	 * The namespace supported by the telemetry connector.
+	 */
+	public static readonly NAMESPACE: string = "entity-storage";
+
+	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<EntityStorageTelemetryConnector>();
