@@ -83,7 +83,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		);
 
 		if (Is.stringValue(options?.loggingConnectorType)) {
-			this._loggingConnector = LoggingConnectorFactory.getIfExists(options.loggingConnectorType);
+			this._loggingConnector = LoggingConnectorFactory.get(options.loggingConnectorType);
 		}
 	}
 

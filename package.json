@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/telemetry",
-	"version": "0.0.3-next.2",
+	"version": "0.0.3-next.3",
 	"description": "Telemetry",
 	"repository": {
 		"type": "git",
