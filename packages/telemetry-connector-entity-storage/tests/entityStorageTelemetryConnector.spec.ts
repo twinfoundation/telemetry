@@ -35,18 +35,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can create a metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 		expect(store?.[0].id).toEqual("test");
 		expect(store?.[0].label).toEqual("Test");
@@ -57,28 +54,22 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can update a metric details", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
-		await telemetry.updateMetric(
-			{
-				id: "test",
-				label: "Test2",
-				description: "Test metric2",
-				unit: "kgs2"
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.updateMetric({
+			id: "test",
+			label: "Test2",
+			description: "Test metric2",
+			unit: "kgs2"
+		});
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 		expect(store?.[0].id).toEqual("test");
 		expect(store?.[0].label).toEqual("Test2");
@@ -89,18 +80,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can create a counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 		expect(store?.[0].id).toEqual("test");
 		expect(store?.[0].label).toEqual("Test");
@@ -111,18 +99,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can create a inc dec counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.IncDecCounter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.IncDecCounter
+		});
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 		expect(store?.[0].id).toEqual("test");
 		expect(store?.[0].label).toEqual("Test");
@@ -133,18 +118,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can create a gauge metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Gauge
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Gauge
+		});
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 		expect(store?.[0].id).toEqual("test");
 		expect(store?.[0].label).toEqual("Test");
@@ -155,27 +137,24 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can increment a counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
-		await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", "inc");
 
-		const valueStore = telemetryMetricsValueEntityStorage.getStore("test");
+		const valueStore = telemetryMetricsValueEntityStorage.getStore();
 		expect(valueStore?.length).toEqual(1);
 		expect(valueStore?.[0].id.length).toEqual(32);
 		expect(valueStore?.[0].metricId).toEqual("test");
 		expect(valueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(valueStore?.[0].value).toEqual(1);
 
-		await telemetry.addMetricValue("test", 5, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 5);
 
 		expect(valueStore?.length).toEqual(2);
 		expect(valueStore?.[1].id.length).toEqual(32);
@@ -186,20 +165,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can fail to decrement a counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
-		await expect(
-			telemetry.addMetricValue("test", "dec", undefined, { partitionId: "test" })
-		).rejects.toMatchObject({
+		await expect(telemetry.addMetricValue("test", "dec")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.counterIncOnly"
 		});
@@ -207,27 +181,24 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can increment an inc/dec counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.IncDecCounter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.IncDecCounter
+		});
 
-		await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", "inc", undefined);
 
-		const valueStore = telemetryMetricsValueEntityStorage.getStore("test");
+		const valueStore = telemetryMetricsValueEntityStorage.getStore();
 		expect(valueStore?.length).toEqual(1);
 		expect(valueStore?.[0].id.length).toEqual(32);
 		expect(valueStore?.[0].metricId).toEqual("test");
 		expect(valueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(valueStore?.[0].value).toEqual(1);
 
-		await telemetry.addMetricValue("test", 5, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 5);
 
 		expect(valueStore?.[1].id.length).toEqual(32);
 		expect(valueStore?.[1].metricId).toEqual("test");
@@ -237,27 +208,24 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can decrement an inc/dec counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.IncDecCounter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.IncDecCounter
+		});
 
-		await telemetry.addMetricValue("test", "dec", undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", "dec");
 
-		const valueStore = telemetryMetricsValueEntityStorage.getStore("test");
+		const valueStore = telemetryMetricsValueEntityStorage.getStore();
 		expect(valueStore?.length).toEqual(1);
 		expect(valueStore?.[0].id.length).toEqual(32);
 		expect(valueStore?.[0].metricId).toEqual("test");
 		expect(valueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(valueStore?.[0].value).toEqual(-1);
 
-		await telemetry.addMetricValue("test", -5, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", -5);
 
 		expect(valueStore?.[1].id.length).toEqual(32);
 		expect(valueStore?.[1].metricId).toEqual("test");
@@ -267,20 +235,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can fail to set a value to a non integer inc/dec counter metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.IncDecCounter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.IncDecCounter
+		});
 
-		await expect(
-			telemetry.addMetricValue("test", 5.5, undefined, { partitionId: "test" })
-		).rejects.toMatchObject({
+		await expect(telemetry.addMetricValue("test", 5.5)).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.upDownCounterIncOrDecOnly"
 		});
@@ -288,27 +251,24 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can set a gauge metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Gauge
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Gauge
+		});
 
-		await telemetry.addMetricValue("test", 11, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 11);
 
-		const valueStore = telemetryMetricsValueEntityStorage.getStore("test");
+		const valueStore = telemetryMetricsValueEntityStorage.getStore();
 		expect(valueStore?.length).toEqual(1);
 		expect(valueStore?.[0].id.length).toEqual(32);
 		expect(valueStore?.[0].metricId).toEqual("test");
 		expect(valueStore?.[0].ts).toBeLessThanOrEqual(Date.now());
 		expect(valueStore?.[0].value).toEqual(11);
 
-		await telemetry.addMetricValue("test", 12, undefined, { partitionId: "test" });
+		await telemetry.addMetricValue("test", 12);
 
 		expect(valueStore?.[1].id.length).toEqual(32);
 		expect(valueStore?.[1].metricId).toEqual("test");
@@ -318,20 +278,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can fail to inc a gauge metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Gauge
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Gauge
+		});
 
-		await expect(
-			telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" })
-		).rejects.toMatchObject({
+		await expect(telemetry.addMetricValue("test", "inc")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.gaugeNoIncDec"
 		});
@@ -339,20 +294,15 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can fail to dec a gauge metric", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Gauge
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Gauge
+		});
 
-		await expect(
-			telemetry.addMetricValue("test", "dec", undefined, { partitionId: "test" })
-		).rejects.toMatchObject({
+		await expect(telemetry.addMetricValue("test", "dec")).rejects.toMatchObject({
 			name: "GeneralError",
 			message: "entityStorageTelemetryConnector.gaugeNoIncDec"
 		});
@@ -360,28 +310,25 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can remove a metric and its values", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
 		for (let i = 0; i < 10; i++) {
-			await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
+			await telemetry.addMetricValue("test", "inc");
 		}
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 
-		const valueStore = telemetryMetricsValueEntityStorage.getStore("test");
+		const valueStore = telemetryMetricsValueEntityStorage.getStore();
 		expect(valueStore?.length).toEqual(10);
 
-		await telemetry.removeMetric("test", { partitionId: "test" });
+		await telemetry.removeMetric("test");
 		expect(store?.length).toEqual(0);
 		expect(valueStore?.length).toEqual(0);
 	});
@@ -390,24 +337,19 @@ describe("EntityStorageTelemetryConnector", () => {
 		const telemetry = new EntityStorageTelemetryConnector();
 
 		for (let i = 0; i < 11; i++) {
-			await telemetry.createMetric(
-				{
-					id: `test${i}`,
-					label: "Test",
-					description: "Test metric",
-					unit: "kgs",
-					type: MetricType.Counter
-				},
-				{ partitionId: "test" }
-			);
+			await telemetry.createMetric({
+				id: `test${i}`,
+				label: "Test",
+				description: "Test metric",
+				unit: "kgs",
+				type: MetricType.Counter
+			});
 		}
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(11);
 
-		const query1 = await telemetry.query(undefined, undefined, 10, {
-			partitionId: "test"
-		});
+		const query1 = await telemetry.query(undefined, undefined, 10);
 
 		expect(query1.entities.length).toEqual(10);
 		expect(query1.totalEntities).toEqual(11);
@@ -417,37 +359,29 @@ describe("EntityStorageTelemetryConnector", () => {
 		const telemetry = new EntityStorageTelemetryConnector();
 
 		for (let i = 0; i < 5; i++) {
-			await telemetry.createMetric(
-				{
-					id: `test-${i}`,
-					label: "Test",
-					description: "Test metric",
-					unit: "kgs",
-					type: MetricType.Counter
-				},
-				{ partitionId: "test" }
-			);
+			await telemetry.createMetric({
+				id: `test-${i}`,
+				label: "Test",
+				description: "Test metric",
+				unit: "kgs",
+				type: MetricType.Counter
+			});
 		}
 
 		for (let i = 0; i < 3; i++) {
-			await telemetry.createMetric(
-				{
-					id: `test2-${i}`,
-					label: "Test",
-					description: "Test metric",
-					unit: "kgs",
-					type: MetricType.IncDecCounter
-				},
-				{ partitionId: "test" }
-			);
+			await telemetry.createMetric({
+				id: `test2-${i}`,
+				label: "Test",
+				description: "Test metric",
+				unit: "kgs",
+				type: MetricType.IncDecCounter
+			});
 		}
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(8);
 
-		const query1 = await telemetry.query(MetricType.IncDecCounter, undefined, 10, {
-			partitionId: "test"
-		});
+		const query1 = await telemetry.query(MetricType.IncDecCounter, undefined, 10);
 
 		expect(query1.entities.length).toEqual(3);
 		expect(query1.totalEntities).toEqual(3);
@@ -455,30 +389,25 @@ describe("EntityStorageTelemetryConnector", () => {
 
 	test("can query a metric and its values", async () => {
 		const telemetry = new EntityStorageTelemetryConnector();
-		await telemetry.createMetric(
-			{
-				id: "test",
-				label: "Test",
-				description: "Test metric",
-				unit: "kgs",
-				type: MetricType.Counter
-			},
-			{ partitionId: "test" }
-		);
+		await telemetry.createMetric({
+			id: "test",
+			label: "Test",
+			description: "Test metric",
+			unit: "kgs",
+			type: MetricType.Counter
+		});
 
 		for (let i = 0; i < 50; i++) {
-			await telemetry.addMetricValue("test", "inc", undefined, { partitionId: "test" });
+			await telemetry.addMetricValue("test", "inc");
 		}
 
-		const store = telemetryMetricsEntityStorage.getStore("test");
+		const store = telemetryMetricsEntityStorage.getStore();
 		expect(store?.length).toEqual(1);
 
-		const valueStore = telemetryMetricsValueEntityStorage.getStore("test");
+		const valueStore = telemetryMetricsValueEntityStorage.getStore();
 		expect(valueStore?.length).toEqual(50);
 
-		const query1 = await telemetry.queryValues("test", undefined, undefined, undefined, 20, {
-			partitionId: "test"
-		});
+		const query1 = await telemetry.queryValues("test", undefined, undefined, undefined, 20);
 
 		expect(query1.metric.id).toEqual("test");
 		expect(query1.metric.label).toEqual("Test");
@@ -489,15 +418,11 @@ describe("EntityStorageTelemetryConnector", () => {
 		expect(query1.entities.length).toEqual(20);
 		expect(query1.totalEntities).toEqual(50);
 
-		const query2 = await telemetry.queryValues("test", undefined, undefined, query1.cursor, 20, {
-			partitionId: "test"
-		});
+		const query2 = await telemetry.queryValues("test", undefined, undefined, query1.cursor, 20);
 		expect(query2.entities.length).toEqual(20);
 		expect(query2.totalEntities).toEqual(50);
 
-		const query3 = await telemetry.queryValues("test", undefined, undefined, query2.cursor, 20, {
-			partitionId: "test"
-		});
+		const query3 = await telemetry.queryValues("test", undefined, undefined, query2.cursor, 20);
 		expect(query3.entities.length).toEqual(10);
 		expect(query3.totalEntities).toEqual(50);
 	});

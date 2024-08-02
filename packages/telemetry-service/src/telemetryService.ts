@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
 import {
 	type ITelemetryMetric,
 	TelemetryConnectorFactory,
@@ -41,48 +40,36 @@ export class TelemetryService implements ITelemetry {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async createMetric(
-		metric: ITelemetryMetric,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	public async createMetric(metric: ITelemetryMetric): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 
-		await this._telemetryConnector.createMetric(metric, requestContext);
+		await this._telemetryConnector.createMetric(metric);
 	}
 
 	/**
 	 * Get the metric details and it's most recent value.
 	 * @param id The metric id.
-	 * @param requestContext The context for the request.
 	 * @returns The metric details and it's most recent value.
 	 */
-	public async getMetric(
-		id: string,
-		requestContext?: IServiceRequestContext
-	): Promise<{
+	public async getMetric(id: string): Promise<{
 		metric: ITelemetryMetric;
 		value: ITelemetryMetricValue;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		return this._telemetryConnector.getMetric(id, requestContext);
+		return this._telemetryConnector.getMetric(id);
 	}
 
 	/**
 	 * Update metric.
 	 * @param metric The metric details.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async updateMetric(
-		metric: Omit<ITelemetryMetric, "type">,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	public async updateMetric(metric: Omit<ITelemetryMetric, "type">): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.id), metric.id);
-		return this._telemetryConnector.updateMetric(metric, requestContext);
+		return this._telemetryConnector.updateMetric(metric);
 	}
 
 	/**
@@ -90,29 +77,26 @@ export class TelemetryService implements ITelemetry {
 	 * @param id The id of the metric.
 	 * @param value The value for the add operation.
 	 * @param customData The custom data for the add operation.
-	 * @param requestContext The context for the request.
 	 * @returns The created metric value id.
 	 */
 	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
-		customData?: { [key: string]: unknown },
-		requestContext?: IServiceRequestContext
+		customData?: { [key: string]: unknown }
 	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		Guards.defined(this.CLASS_NAME, nameof(value), value);
-		return this._telemetryConnector.addMetricValue(id, value, customData, requestContext);
+		return this._telemetryConnector.addMetricValue(id, value, customData);
 	}
 
 	/**
 	 * Remove metric.
 	 * @param id The id of the metric.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async removeMetric(id: string, requestContext?: IServiceRequestContext): Promise<void> {
+	public async removeMetric(id: string): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		return this._telemetryConnector.removeMetric(id, requestContext);
+		return this._telemetryConnector.removeMetric(id);
 	}
 
 	/**
@@ -120,7 +104,6 @@ export class TelemetryService implements ITelemetry {
 	 * @param type The type of the metric.
 	 * @param cursor The cursor to request the next page of entities.
 	 * @param pageSize The maximum number of entities in a page.
-	 * @param requestContext The context for the request.
 	 * @returns All the entities for the storage matching the conditions,
 	 * and a cursor which can be used to request more entities.
 	 * @throws NotImplementedError if the implementation does not support retrieval.
@@ -128,8 +111,7 @@ export class TelemetryService implements ITelemetry {
 	public async query(
 		type?: MetricType,
 		cursor?: string,
-		pageSize?: number,
-		requestContext?: IServiceRequestContext
+		pageSize?: number
 	): Promise<{
 		/**
 		 * The metrics.
@@ -151,7 +133,7 @@ export class TelemetryService implements ITelemetry {
 		 */
 		totalEntities: number;
 	}> {
-		return this._telemetryConnector.query(type, cursor, pageSize, requestContext);
+		return this._telemetryConnector.query(type, cursor, pageSize);
 	}
 
 	/**
@@ -161,7 +143,6 @@ export class TelemetryService implements ITelemetry {
 	 * @param timeEnd The inclusive time as the end of the metric entries.
 	 * @param cursor The cursor to request the next page of entities.
 	 * @param pageSize The maximum number of entities in a page.
-	 * @param requestContext The context for the request.
 	 * @returns All the entities for the storage matching the conditions,
 	 * and a cursor which can be used to request more entities.
 	 * @throws NotImplementedError if the implementation does not support retrieval.
@@ -171,8 +152,7 @@ export class TelemetryService implements ITelemetry {
 		timeStart?: number,
 		timeEnd?: number,
 		cursor?: string,
-		pageSize?: number,
-		requestContext?: IServiceRequestContext
+		pageSize?: number
 	): Promise<{
 		/**
 		 * The metric details.
@@ -196,13 +176,6 @@ export class TelemetryService implements ITelemetry {
 		totalEntities: number;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
-		return this._telemetryConnector.queryValues(
-			id,
-			timeStart,
-			timeEnd,
-			cursor,
-			pageSize,
-			requestContext
-		);
+		return this._telemetryConnector.queryValues(id, timeStart, timeEnd, cursor, pageSize);
 	}
 }
