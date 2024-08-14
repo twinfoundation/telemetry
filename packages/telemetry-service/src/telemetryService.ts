@@ -3,10 +3,10 @@
 import { Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import {
-	type ITelemetryMetric,
 	TelemetryConnectorFactory,
-	type ITelemetry,
+	type ITelemetryComponent,
 	type ITelemetryConnector,
+	type ITelemetryMetric,
 	type ITelemetryMetricValue,
 	type MetricType
 } from "@gtsc/telemetry-models";
@@ -14,7 +14,7 @@ import {
 /**
  * Service for performing telemetry operations to a connector.
  */
-export class TelemetryService implements ITelemetry {
+export class TelemetryService implements ITelemetryComponent {
 	/**
 	 * Runtime name for the class.
 	 */

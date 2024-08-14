@@ -7,13 +7,12 @@ import type {
 	IRestRoute,
 	ITag
 } from "@gtsc/api-models";
-import { Coerce, Guards } from "@gtsc/core";
+import { Coerce, ComponentFactory, Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory } from "@gtsc/services";
 import {
 	MetricType,
-	type ITelemetry,
 	type ITelemetryAddMetricValueRequest,
+	type ITelemetryComponent,
 	type ITelemetryCreateMetricRequest,
 	type ITelemetryGetMetricRequest,
 	type ITelemetryGetMetricResponse,
@@ -44,12 +43,12 @@ export const tagsTelemetry: ITag[] = [
 /**
  * The REST routes for telemetry.
  * @param baseRouteName Prefix to prepend to the paths.
- * @param factoryServiceName The name of the service to use in the routes store in the ServiceFactory.
+ * @param componentName The name of the component to use in the routes stored in the ComponentFactory.
  * @returns The generated routes.
  */
 export function generateRestRoutesTelemetry(
 	baseRouteName: string,
-	factoryServiceName: string
+	componentName: string
 ): IRestRoute[] {
 	const createMetricRoute: IRestRoute<ITelemetryCreateMetricRequest, ICreatedResponse> = {
 		operationId: "telemetryCreateMetric",
@@ -58,7 +57,7 @@ export function generateRestRoutesTelemetry(
 		method: "POST",
 		path: `${baseRouteName}/metric/`,
 		handler: async (httpRequestContext, request) =>
-			telemetryCreateMetric(httpRequestContext, factoryServiceName, request),
+			telemetryCreateMetric(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryCreateMetricRequest>(),
 			examples: [
@@ -101,7 +100,7 @@ export function generateRestRoutesTelemetry(
 		method: "GET",
 		path: `${baseRouteName}/metric/:id`,
 		handler: async (httpRequestContext, request) =>
-			telemetryGetMetric(httpRequestContext, factoryServiceName, request),
+			telemetryGetMetric(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryGetMetricRequest>(),
 			examples: [
@@ -150,7 +149,7 @@ export function generateRestRoutesTelemetry(
 		method: "PUT",
 		path: `${baseRouteName}/metric/:id`,
 		handler: async (httpRequestContext, request) =>
-			telemetryUpdateMetric(httpRequestContext, factoryServiceName, request),
+			telemetryUpdateMetric(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryUpdateMetricRequest>(),
 			examples: [
@@ -181,7 +180,7 @@ export function generateRestRoutesTelemetry(
 		method: "POST",
 		path: `${baseRouteName}/metric/:id/value`,
 		handler: async (httpRequestContext, request) =>
-			telemetryAddMetricValue(httpRequestContext, factoryServiceName, request),
+			telemetryAddMetricValue(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryAddMetricValueRequest>(),
 			examples: [
@@ -234,7 +233,7 @@ export function generateRestRoutesTelemetry(
 		method: "DELETE",
 		path: `${baseRouteName}/metric/:id`,
 		handler: async (httpRequestContext, request) =>
-			telemetryRemoveMetric(httpRequestContext, factoryServiceName, request),
+			telemetryRemoveMetric(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryRemoveMetricRequest>(),
 			examples: [
@@ -262,7 +261,7 @@ export function generateRestRoutesTelemetry(
 		method: "GET",
 		path: `${baseRouteName}/metric/`,
 		handler: async (httpRequestContext, request) =>
-			telemetryMetricList(httpRequestContext, factoryServiceName, request),
+			telemetryMetricList(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryListRequest>(),
 			examples: [
@@ -319,7 +318,7 @@ export function generateRestRoutesTelemetry(
 		method: "GET",
 		path: `${baseRouteName}/metric/:id/value`,
 		handler: async (httpRequestContext, request) =>
-			telemetryMetricValueList(httpRequestContext, factoryServiceName, request),
+			telemetryMetricValueList(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<ITelemetryValuesListRequest>(),
 			examples: [
@@ -384,13 +383,13 @@ export function generateRestRoutesTelemetry(
 /**
  * Create a new telemetry metric.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryCreateMetric(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryCreateMetricRequest
 ): Promise<ICreatedResponse> {
 	Guards.object<ITelemetryCreateMetricRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -400,8 +399,8 @@ export async function telemetryCreateMetric(
 		request.body
 	);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
-	await service.createMetric({
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
+	await component.createMetric({
 		id: request.body.id,
 		label: request.body.label,
 		description: request.body.description,
@@ -419,13 +418,13 @@ export async function telemetryCreateMetric(
 /**
  * Gets a telemetry metric.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryGetMetric(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryGetMetricRequest
 ): Promise<ITelemetryGetMetricResponse> {
 	Guards.object<ITelemetryGetMetricRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -436,21 +435,21 @@ export async function telemetryGetMetric(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
-	const result = await service.getMetric(request.pathParams.id);
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
+	const result = await component.getMetric(request.pathParams.id);
 	return { body: result };
 }
 
 /**
  * Updates a telemetry metric.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryUpdateMetric(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryUpdateMetricRequest
 ): Promise<INoContentResponse> {
 	Guards.object<ITelemetryUpdateMetricRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -466,8 +465,8 @@ export async function telemetryUpdateMetric(
 		request.body
 	);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
-	await service.updateMetric({
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
+	await component.updateMetric({
 		id: request.pathParams.id,
 		label: request.body.label,
 		description: request.body.description,
@@ -480,13 +479,13 @@ export async function telemetryUpdateMetric(
 /**
  * Add a telemetry metric value.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryAddMetricValue(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryAddMetricValueRequest
 ): Promise<ICreatedResponse> {
 	Guards.object<ITelemetryAddMetricValueRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -502,8 +501,8 @@ export async function telemetryAddMetricValue(
 		request.body
 	);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
-	const id = await service.addMetricValue(
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
+	const id = await component.addMetricValue(
 		request.pathParams.id,
 		request.body.value,
 		request.body.customData
@@ -515,13 +514,13 @@ export async function telemetryAddMetricValue(
 /**
  * Removes a telemetry metric.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryRemoveMetric(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryRemoveMetricRequest
 ): Promise<INoContentResponse> {
 	Guards.object<ITelemetryRemoveMetricRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -532,8 +531,8 @@ export async function telemetryRemoveMetric(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
-	await service.removeMetric(request.pathParams.id);
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
+	await component.removeMetric(request.pathParams.id);
 	return {
 		statusCode: HttpStatusCode.noContent
 	};
@@ -542,13 +541,13 @@ export async function telemetryRemoveMetric(
 /**
  * Get a list of the telemetry metrics.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryMetricList(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryListRequest
 ): Promise<ITelemetryListResponse> {
 	Guards.object<ITelemetryListRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -558,9 +557,9 @@ export async function telemetryMetricList(
 		request.query
 	);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
 
-	const itemsAndCursor = await service.query(
+	const itemsAndCursor = await component.query(
 		request?.query.type,
 		request?.query?.cursor,
 		Coerce.number(request?.query?.pageSize)
@@ -574,13 +573,13 @@ export async function telemetryMetricList(
 /**
  * Get a list of the telemetry metric values.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function telemetryMetricValueList(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: ITelemetryValuesListRequest
 ): Promise<ITelemetryValuesListResponse> {
 	Guards.object<ITelemetryValuesListRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -591,9 +590,9 @@ export async function telemetryMetricValueList(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<ITelemetry>(factoryServiceName);
+	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
 
-	const itemsAndCursor = await service.queryValues(
+	const itemsAndCursor = await component.queryValues(
 		request?.pathParams.id,
 		Coerce.number(request?.query?.timeStart),
 		Coerce.number(request?.query?.timeEnd),

@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IService } from "@gtsc/services";
+import type { IComponent } from "@gtsc/core";
 import type { ITelemetryMetric } from "./ITelemetryMetric";
 import type { ITelemetryMetricValue } from "./ITelemetryMetricValue";
 import type { MetricType } from "./metricType";
@@ -8,7 +8,7 @@ import type { MetricType } from "./metricType";
 /**
  * Interface describing a telemetry connector.
  */
-export interface ITelemetryConnector extends IService {
+export interface ITelemetryConnector extends IComponent {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.

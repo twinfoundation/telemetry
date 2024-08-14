@@ -5,8 +5,8 @@ import type { IBaseRestClientConfig, ICreatedResponse, INoContentResponse } from
 import { Guards, StringHelper } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type {
-	ITelemetry,
 	ITelemetryAddMetricValueRequest,
+	ITelemetryComponent,
 	ITelemetryCreateMetricRequest,
 	ITelemetryGetMetricRequest,
 	ITelemetryGetMetricResponse,
@@ -24,7 +24,7 @@ import type {
 /**
  * Client for performing telemetry through to REST endpoints.
  */
-export class TelemetryClient extends BaseRestClient implements ITelemetry {
+export class TelemetryClient extends BaseRestClient implements ITelemetryComponent {
 	/**
 	 * Runtime name for the class.
 	 * @internal
@@ -41,7 +41,11 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(TelemetryClient._CLASS_NAME, config, StringHelper.kebabCase(nameof<ITelemetry>()));
+		super(
+			TelemetryClient._CLASS_NAME,
+			config,
+			StringHelper.kebabCase(nameof<ITelemetryComponent>())
+		);
 	}
 
 	/**

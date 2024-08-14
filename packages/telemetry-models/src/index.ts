@@ -13,7 +13,7 @@ export * from "./models/api/ITelemetryRemoveMetricRequest";
 export * from "./models/api/ITelemetryUpdateMetricRequest";
 export * from "./models/api/ITelemetryValuesListRequest";
 export * from "./models/api/ITelemetryValuesListResponse";
-export * from "./models/ITelemetry";
+export * from "./models/ITelemetryComponent";
 export * from "./models/ITelemetryConnector";
 export * from "./models/ITelemetryMetric";
 export * from "./models/ITelemetryMetricValue";
