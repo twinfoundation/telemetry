@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@gtsc/api-core";
 import type { IBaseRestClientConfig, ICreatedResponse, INoContentResponse } from "@gtsc/api-models";
-import { Guards, StringHelper } from "@gtsc/core";
+import { Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type {
 	ITelemetryAddMetricValueRequest,
@@ -41,11 +41,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(
-			TelemetryClient._CLASS_NAME,
-			config,
-			StringHelper.kebabCase(nameof<ITelemetryComponent>())
-		);
+		super(TelemetryClient._CLASS_NAME, config, "telemetry");
 	}
 
 	/**
