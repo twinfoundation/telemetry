@@ -19,6 +19,7 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 
 	/**
 	 * The connectors to send the telemetry entries to.
+	 * @internal
 	 */
 	private readonly _telemetryConnectors: ITelemetryConnector[];
 
