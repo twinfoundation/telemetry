@@ -11,9 +11,9 @@ import {
 } from "@gtsc/core";
 import {
 	ComparisonOperator,
+	type EntityCondition,
 	LogicalOperator,
-	SortDirection,
-	type EntityCondition
+	SortDirection
 } from "@gtsc/entity";
 import {
 	EntityStorageConnectorFactory,
@@ -112,7 +112,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		const telemetryMetric: TelemetryMetric = {
 			id: metric.id,
 			label: metric.label,
-			type: Object.values(MetricType).indexOf(metric.type),
+			type: metric.type,
 			unit: metric.unit ?? "",
 			description: metric.description ?? ""
 		};
@@ -202,7 +202,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		}
 
 		const existingMetricValue = await this._metricValueStorage.query(
-			{ property: "metricId", operator: ComparisonOperator.Equals, value: id },
+			{ property: "metricId", comparison: ComparisonOperator.Equals, value: id },
 			[
 				{
 					property: "ts",
@@ -217,8 +217,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		const lastMetric = existingMetricValue.entities[0];
 		let newValue = Is.notEmpty(lastMetric) ? (lastMetric.value as number) : 0;
 
-		const type = Object.values(MetricType)[existingMetric.type];
-		if (type === MetricType.Counter) {
+		if (existingMetric.type === MetricType.Counter) {
 			if (value === "inc") {
 				newValue++;
 			} else if (Is.integer(value) && value > 0) {
@@ -226,7 +225,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "counterIncOnly");
 			}
-		} else if (type === MetricType.IncDecCounter) {
+		} else if (existingMetric.type === MetricType.IncDecCounter) {
 			if (value === "inc") {
 				newValue++;
 			} else if (value === "dec") {
@@ -281,7 +280,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		do {
 			const existingMetricValues = await this._metricValueStorage.query({
 				property: "metricId",
-				operator: ComparisonOperator.Equals,
+				comparison: ComparisonOperator.Equals,
 				value: id
 			});
 			await Promise.allSettled(
@@ -334,18 +333,16 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		 */
 		totalEntities: number;
 	}> {
-		const metricTypes: MetricType[] = Object.values(MetricType);
-
 		const condition: EntityCondition<TelemetryMetric> = {
 			conditions: [],
 			logicalOperator: LogicalOperator.And
 		};
 
-		if (Is.stringValue(type) && Is.arrayOneOf(type, metricTypes)) {
+		if (Is.arrayOneOf(type, Object.values(MetricType))) {
 			condition.conditions.push({
 				property: "type",
-				operator: ComparisonOperator.Equals,
-				value: metricTypes.indexOf(type)
+				comparison: ComparisonOperator.Equals,
+				value: type
 			});
 		}
 
@@ -363,13 +360,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		);
 
 		return {
-			entities: result.entities.map(
-				t =>
-					({
-						...t,
-						type: metricTypes[t.type as number]
-					}) as ITelemetryMetric
-			),
+			entities: result.entities as ITelemetryMetric[],
 			cursor: result.cursor,
 			pageSize: result.pageSize,
 			totalEntities: result.totalEntities
@@ -433,14 +424,14 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 
 		condition.conditions.push({
 			property: "metricId",
-			operator: ComparisonOperator.Equals,
+			comparison: ComparisonOperator.Equals,
 			value: id
 		});
 
 		if (Is.number(timeStart)) {
 			condition.conditions.push({
 				property: "ts",
-				operator: ComparisonOperator.GreaterThanOrEqual,
+				comparison: ComparisonOperator.GreaterThanOrEqual,
 				value: timeStart
 			});
 		}
@@ -448,7 +439,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		if (Is.number(timeEnd)) {
 			condition.conditions.push({
 				property: "ts",
-				operator: ComparisonOperator.LessThanOrEqual,
+				comparison: ComparisonOperator.LessThanOrEqual,
 				value: timeEnd
 			});
 		}
@@ -466,14 +457,9 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			pageSize
 		);
 
-		const types: MetricType[] = Object.values(MetricType);
-
 		return {
-			metric: {
-				...existingMetric,
-				type: types[existingMetric.type as number]
-			},
-			entities: result.entities as TelemetryMetricValue[],
+			metric: existingMetric as ITelemetryMetric,
+			entities: result.entities as ITelemetryMetricValue[],
 			cursor: result.cursor,
 			pageSize: result.pageSize,
 			totalEntities: result.totalEntities
