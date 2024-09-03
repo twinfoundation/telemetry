@@ -276,20 +276,24 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 
 		await this._metricStorage.remove(id);
 
-		let remainingCount = 0;
+		let existingMetricValuesResult;
 		do {
-			const existingMetricValues = await this._metricValueStorage.query({
-				property: "metricId",
-				comparison: ComparisonOperator.Equals,
-				value: id
-			});
+			existingMetricValuesResult = await this._metricValueStorage.query(
+				{
+					property: "metricId",
+					comparison: ComparisonOperator.Equals,
+					value: id
+				},
+				undefined,
+				undefined,
+				existingMetricValuesResult?.cursor
+			);
 			await Promise.allSettled(
-				existingMetricValues.entities.map(async telemetryMetricValue => {
+				existingMetricValuesResult.entities.map(async telemetryMetricValue => {
 					this._metricValueStorage.remove((telemetryMetricValue as TelemetryMetricValue).id);
 				})
 			);
-			remainingCount = existingMetricValues.totalEntities;
-		} while (remainingCount > 0);
+		} while (Is.stringValue(existingMetricValuesResult.cursor));
 
 		await this._loggingConnector?.log({
 			source: this.CLASS_NAME,
@@ -322,16 +326,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		const condition: EntityCondition<TelemetryMetric> = {
 			conditions: [],
@@ -361,9 +355,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 
 		return {
 			entities: result.entities as ITelemetryMetric[],
-			cursor: result.cursor,
-			pageSize: result.pageSize,
-			totalEntities: result.totalEntities
+			cursor: result.cursor
 		};
 	}
 
@@ -399,16 +391,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
@@ -460,9 +442,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		return {
 			metric: existingMetric as ITelemetryMetric,
 			entities: result.entities as ITelemetryMetricValue[],
-			cursor: result.cursor,
-			pageSize: result.pageSize,
-			totalEntities: result.totalEntities
+			cursor: result.cursor
 		};
 	}
 }

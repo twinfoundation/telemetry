@@ -352,7 +352,6 @@ describe("EntityStorageTelemetryConnector", () => {
 		const query1 = await telemetry.query(undefined, undefined, 10);
 
 		expect(query1.entities.length).toEqual(10);
-		expect(query1.totalEntities).toEqual(11);
 	});
 
 	test("can query metrics for specific type", async () => {
@@ -386,7 +385,6 @@ describe("EntityStorageTelemetryConnector", () => {
 		const query1 = await telemetry.query(MetricType.IncDecCounter, undefined, 10);
 
 		expect(query1.entities.length).toEqual(3);
-		expect(query1.totalEntities).toEqual(3);
 	});
 
 	test("can query a metric and its values", async () => {
@@ -418,14 +416,11 @@ describe("EntityStorageTelemetryConnector", () => {
 		expect(query1.metric.type).toEqual(MetricType.Counter);
 
 		expect(query1.entities.length).toEqual(20);
-		expect(query1.totalEntities).toEqual(50);
 
 		const query2 = await telemetry.queryValues("test", undefined, undefined, query1.cursor, 20);
 		expect(query2.entities.length).toEqual(20);
-		expect(query2.totalEntities).toEqual(50);
 
 		const query3 = await telemetry.queryValues("test", undefined, undefined, query2.cursor, 20);
 		expect(query3.entities.length).toEqual(10);
-		expect(query3.totalEntities).toEqual(50);
 	});
 });

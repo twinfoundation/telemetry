@@ -149,16 +149,6 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		// See if we can find a connector that supports querying.
 		// If it throws anything other than not implemented, we should throw it.
@@ -208,16 +198,6 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		// See if we can find a connector that supports querying.
 		// If it throws anything other than not implemented, we should throw it.

@@ -297,9 +297,7 @@ export function generateRestRoutesTelemetry(
 										unit: "M"
 									}
 								],
-								cursor: "1",
-								pageSize: 10,
-								totalEntities: 2
+								cursor: "1"
 							}
 						}
 					}
@@ -358,9 +356,7 @@ export function generateRestRoutesTelemetry(
 										value: 11
 									}
 								],
-								cursor: "1",
-								pageSize: 10,
-								totalEntities: 2
+								cursor: "1"
 							}
 						}
 					}

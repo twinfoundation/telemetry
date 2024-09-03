@@ -76,16 +76,6 @@ export interface ITelemetryConnector extends IComponent {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}>;
 
 	/**
@@ -120,15 +110,5 @@ export interface ITelemetryConnector extends IComponent {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}>;
 }

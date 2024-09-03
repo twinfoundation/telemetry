@@ -87,16 +87,6 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		throw new NotSupportedError(this.CLASS_NAME, "query");
 	}
@@ -133,16 +123,6 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		throw new NotSupportedError(this.CLASS_NAME, "queryValues");
 	}

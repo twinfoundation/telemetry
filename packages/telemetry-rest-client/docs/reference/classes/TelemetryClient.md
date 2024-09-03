@@ -277,18 +277,6 @@ The metrics.
 
 An optional cursor, when defined can be used to call find to get more values.
 
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
-
 #### Implementation of
 
 `ITelemetryComponent.query`
@@ -351,18 +339,6 @@ The values for the metric.
 > `optional` **cursor**: `string`
 
 An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
 
 #### Implementation of
 

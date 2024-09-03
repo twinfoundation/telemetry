@@ -40,14 +40,6 @@ Runtime name for the class.
 
 [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`CLASS_NAME`](../interfaces/ITelemetryConnector.md#class_name)
 
-***
-
-### \_telemetryConnectors
-
-> `private` `readonly` **\_telemetryConnectors**: [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md)[]
-
-The connectors to send the telemetry entries to.
-
 ## Methods
 
 ### createMetric()
@@ -225,18 +217,6 @@ The metrics.
 
 An optional cursor, when defined can be used to call find to get more values.
 
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
-
 #### Implementation of
 
 [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`query`](../interfaces/ITelemetryConnector.md#query)
@@ -299,18 +279,6 @@ The values for the metric.
 > `optional` **cursor**: `string`
 
 An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
 
 #### Implementation of
 

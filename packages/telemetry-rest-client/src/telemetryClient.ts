@@ -172,16 +172,6 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		const result = await this.fetch<ITelemetryListRequest, ITelemetryListResponse>(
 			"/metric/",
@@ -228,14 +218,6 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 

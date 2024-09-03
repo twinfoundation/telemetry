@@ -122,16 +122,6 @@ export class TelemetryService implements ITelemetryComponent {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		return this._telemetryConnector.query(type, cursor, pageSize);
 	}
@@ -166,14 +156,6 @@ export class TelemetryService implements ITelemetryComponent {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		return this._telemetryConnector.queryValues(id, timeStart, timeEnd, cursor, pageSize);
