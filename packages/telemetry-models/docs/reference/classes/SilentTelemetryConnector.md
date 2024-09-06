@@ -26,7 +26,7 @@ Runtime name for the class.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`CLASS_NAME`](../interfaces/ITelemetryConnector.md#class_name)
+`ITelemetryConnector.CLASS_NAME`
 
 ## Methods
 
