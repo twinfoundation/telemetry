@@ -23,7 +23,7 @@ import {
 	type ITelemetryValuesListRequest,
 	type ITelemetryValuesListResponse
 } from "@gtsc/telemetry-models";
-import { HttpStatusCode } from "@gtsc/web";
+import { HeaderTypes, HttpStatusCode } from "@gtsc/web";
 
 /**
  * The source used when communicating about these routes.
@@ -84,7 +84,7 @@ export function generateRestRoutesTelemetry(
 						response: {
 							statusCode: HttpStatusCode.created,
 							headers: {
-								location: "my-counter"
+								[HeaderTypes.Location]: "my-counter"
 							}
 						}
 					}
@@ -217,7 +217,7 @@ export function generateRestRoutesTelemetry(
 						response: {
 							statusCode: HttpStatusCode.created,
 							headers: {
-								location: "aabbccdd11223445566"
+								[HeaderTypes.Location]: "aabbccdd11223445566"
 							}
 						}
 					}
@@ -406,7 +406,7 @@ export async function telemetryCreateMetric(
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {
-			location: request.body.id
+			[HeaderTypes.Location]: request.body.id
 		}
 	};
 }
@@ -504,7 +504,7 @@ export async function telemetryAddMetricValue(
 		request.body.customData
 	);
 
-	return { statusCode: HttpStatusCode.created, headers: { location: id } };
+	return { statusCode: HttpStatusCode.created, headers: { [HeaderTypes.Location]: id } };
 }
 
 /**
