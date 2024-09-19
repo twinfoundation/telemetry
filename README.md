@@ -1,6 +1,6 @@
-# GTSC Telemetry
+# TWIN Telemetry
 
-This mono-repository contains the packages to use with telemetry in GTSC applications.
+This mono-repository contains the packages to use with telemetry in TWIN applications.
 
 ## Packages
 

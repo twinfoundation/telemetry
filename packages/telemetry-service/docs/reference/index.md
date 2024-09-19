@@ -1,4 +1,4 @@
-# @gtsc/telemetry-service
+# @twin.org/telemetry-service
 
 ## Classes
 

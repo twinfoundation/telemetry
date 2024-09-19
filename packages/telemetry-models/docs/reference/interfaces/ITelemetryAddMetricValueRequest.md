@@ -36,6 +36,6 @@ The value for the update operation.
 
 The custom data for the update operation.
 
-##### Index signature
+##### Index Signature
 
  \[`key`: `string`\]: `unknown`

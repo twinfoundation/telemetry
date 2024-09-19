@@ -221,13 +221,13 @@ The metrics.
 
 An optional cursor, when defined can be used to call find to get more values.
 
-#### Implementation of
-
-`ITelemetryComponent.query`
-
 #### Throws
 
 NotImplementedError if the implementation does not support retrieval.
+
+#### Implementation of
+
+`ITelemetryComponent.query`
 
 ***
 
@@ -284,10 +284,10 @@ The values for the metric.
 
 An optional cursor, when defined can be used to call find to get more values.
 
-#### Implementation of
-
-`ITelemetryComponent.queryValues`
-
 #### Throws
 
 NotImplementedError if the implementation does not support retrieval.
+
+#### Implementation of
+
+`ITelemetryComponent.queryValues`
