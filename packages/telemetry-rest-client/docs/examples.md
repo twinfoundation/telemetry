@@ -1,1 +1,1 @@
-# @gtsc/telemetry-rest-client - Examples
+# @twin.org/telemetry-rest-client - Examples

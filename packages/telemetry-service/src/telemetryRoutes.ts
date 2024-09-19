@@ -6,9 +6,9 @@ import type {
 	INoContentResponse,
 	IRestRoute,
 	ITag
-} from "@gtsc/api-models";
-import { Coerce, ComponentFactory, Guards } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/api-models";
+import { Coerce, ComponentFactory, Guards } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import {
 	MetricType,
 	type ITelemetryAddMetricValueRequest,
@@ -22,8 +22,8 @@ import {
 	type ITelemetryUpdateMetricRequest,
 	type ITelemetryValuesListRequest,
 	type ITelemetryValuesListResponse
-} from "@gtsc/telemetry-models";
-import { HeaderTypes, HttpStatusCode } from "@gtsc/web";
+} from "@twin.org/telemetry-models";
+import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
 
 /**
  * The source used when communicating about these routes.

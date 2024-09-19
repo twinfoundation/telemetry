@@ -1,4 +1,4 @@
-# @gtsc/telemetry-models
+# @twin.org/telemetry-models
 
 ## Classes
 

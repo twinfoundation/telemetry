@@ -8,25 +8,25 @@ import {
 	Is,
 	NotFoundError,
 	RandomHelper
-} from "@gtsc/core";
+} from "@twin.org/core";
 import {
 	ComparisonOperator,
 	type EntityCondition,
 	LogicalOperator,
 	SortDirection
-} from "@gtsc/entity";
+} from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@gtsc/entity-storage-models";
-import { type ILoggingConnector, LoggingConnectorFactory } from "@gtsc/logging-models";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/entity-storage-models";
+import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
+import { nameof } from "@twin.org/nameof";
 import {
 	type ITelemetryConnector,
 	type ITelemetryMetric,
 	type ITelemetryMetricValue,
 	MetricType
-} from "@gtsc/telemetry-models";
+} from "@twin.org/telemetry-models";
 import type { TelemetryMetric } from "./entities/telemetryMetric";
 import type { TelemetryMetricValue } from "./entities/telemetryMetricValue";
 

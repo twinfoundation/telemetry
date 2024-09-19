@@ -1,8 +1,8 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Global Trade and Supply Chain - Test Endpoints",
-        "description": "REST API for Global Trade and Supply Chain - Test Endpoints.",
+        "title": "TWIN - Test Endpoints",
+        "description": "REST API for TWIN - Test Endpoints.",
         "version": "1.0.0",
         "license": {
             "name": "Apache 2.0 License",
@@ -68,7 +68,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -89,7 +89,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -107,7 +107,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -199,7 +199,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -220,7 +220,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -238,7 +238,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -313,7 +313,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -334,7 +334,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -352,7 +352,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -418,7 +418,7 @@
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -439,7 +439,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -457,7 +457,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -505,7 +505,7 @@
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -526,7 +526,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -544,7 +544,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -625,7 +625,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -646,7 +646,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -664,7 +664,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -780,7 +780,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -801,7 +801,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -819,7 +819,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -877,6 +877,95 @@
                 "additionalProperties": false,
                 "description": "Model to describe serialized error."
             },
+            "MetricType": {
+                "anyOf": [
+                    {
+                        "type": "number",
+                        "const": 0,
+                        "description": "Counter."
+                    },
+                    {
+                        "type": "number",
+                        "const": 1,
+                        "description": "Increment Decrement Counter."
+                    },
+                    {
+                        "type": "number",
+                        "const": 2,
+                        "description": "Gauge."
+                    }
+                ],
+                "description": "The types of metrics."
+            },
+            "TelemetryAddMetricValueRequest": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "const": "inc"
+                            },
+                            {
+                                "type": "string",
+                                "const": "dec"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "description": "The value for the update operation."
+                    },
+                    "customData": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "description": "The custom data for the update operation."
+                    }
+                },
+                "required": [
+                    "value"
+                ],
+                "additionalProperties": false,
+                "description": "The data to be used in the update."
+            },
+            "TelemetryGetMetricResponse": {
+                "type": "object",
+                "properties": {
+                    "metric": {
+                        "$ref": "#/components/schemas/TelemetryMetric"
+                    },
+                    "value": {
+                        "$ref": "#/components/schemas/TelemetryMetricValue"
+                    }
+                },
+                "required": [
+                    "metric",
+                    "value"
+                ],
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
+            "TelemetryListResponse": {
+                "type": "object",
+                "properties": {
+                    "entities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TelemetryMetric"
+                        },
+                        "description": "The metrics."
+                    },
+                    "cursor": {
+                        "type": "string",
+                        "description": "An optional cursor, when defined can be used to call find to get more entities."
+                    }
+                },
+                "required": [
+                    "entities"
+                ],
+                "additionalProperties": false,
+                "description": "The response payload."
+            },
             "TelemetryMetric": {
                 "type": "object",
                 "properties": {
@@ -907,43 +996,6 @@
                 ],
                 "additionalProperties": false,
                 "description": "Interface describing a telemetry metric."
-            },
-            "MetricType": {
-                "anyOf": [
-                    {
-                        "type": "number",
-                        "const": 0,
-                        "description": "Counter."
-                    },
-                    {
-                        "type": "number",
-                        "const": 1,
-                        "description": "Increment Decrement Counter."
-                    },
-                    {
-                        "type": "number",
-                        "const": 2,
-                        "description": "Gauge."
-                    }
-                ],
-                "description": "The types of metrics."
-            },
-            "TelemetryGetMetricResponse": {
-                "type": "object",
-                "properties": {
-                    "metric": {
-                        "$ref": "#/components/schemas/TelemetryMetric"
-                    },
-                    "value": {
-                        "$ref": "#/components/schemas/TelemetryMetricValue"
-                    }
-                },
-                "required": [
-                    "metric",
-                    "value"
-                ],
-                "additionalProperties": false,
-                "description": "The body parameters."
             },
             "TelemetryMetricValue": {
                 "type": "object",
@@ -995,58 +1047,6 @@
                 ],
                 "additionalProperties": false,
                 "description": "The data to be used in the update."
-            },
-            "TelemetryAddMetricValueRequest": {
-                "type": "object",
-                "properties": {
-                    "value": {
-                        "anyOf": [
-                            {
-                                "type": "string",
-                                "const": "inc"
-                            },
-                            {
-                                "type": "string",
-                                "const": "dec"
-                            },
-                            {
-                                "type": "number"
-                            }
-                        ],
-                        "description": "The value for the update operation."
-                    },
-                    "customData": {
-                        "type": "object",
-                        "additionalProperties": {},
-                        "description": "The custom data for the update operation."
-                    }
-                },
-                "required": [
-                    "value"
-                ],
-                "additionalProperties": false,
-                "description": "The data to be used in the update."
-            },
-            "TelemetryListResponse": {
-                "type": "object",
-                "properties": {
-                    "entities": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/TelemetryMetric"
-                        },
-                        "description": "The metrics."
-                    },
-                    "cursor": {
-                        "type": "string",
-                        "description": "An optional cursor, when defined can be used to call find to get more entities."
-                    }
-                },
-                "required": [
-                    "entities"
-                ],
-                "additionalProperties": false,
-                "description": "The response payload."
             },
             "TelemetryValuesListResponse": {
                 "type": "object",

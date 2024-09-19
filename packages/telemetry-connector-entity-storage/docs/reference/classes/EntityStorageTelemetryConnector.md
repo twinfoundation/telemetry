@@ -40,7 +40,7 @@ The type of the logging connector to use, can be undefined for no logging.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"entity-storage"`
+> `readonly` `static` **NAMESPACE**: `string` = `"entity-storage"`
 
 The namespace supported by the telemetry connector.
 
@@ -233,13 +233,13 @@ The metrics.
 
 An optional cursor, when defined can be used to call find to get more values.
 
-#### Implementation of
-
-`ITelemetryConnector.query`
-
 #### Throws
 
 NotImplementedError if the implementation does not support retrieval.
+
+#### Implementation of
+
+`ITelemetryConnector.query`
 
 ***
 
@@ -296,10 +296,10 @@ The values for the metric.
 
 An optional cursor, when defined can be used to call find to get more values.
 
-#### Implementation of
-
-`ITelemetryConnector.queryValues`
-
 #### Throws
 
 NotImplementedError if the implementation does not support retrieval.
+
+#### Implementation of
+
+`ITelemetryConnector.queryValues`

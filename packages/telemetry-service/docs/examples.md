@@ -1,1 +1,1 @@
-# @gtsc/telemetry-service - Examples
+# @twin.org/telemetry-service - Examples

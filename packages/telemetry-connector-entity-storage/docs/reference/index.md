@@ -1,4 +1,4 @@
-# @gtsc/telemetry-connector-entity-storage
+# @twin.org/telemetry-connector-entity-storage
 
 ## Classes
 

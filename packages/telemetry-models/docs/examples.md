@@ -1,1 +1,1 @@
-# @gtsc/telemetry-models - Examples
+# @twin.org/telemetry-models - Examples

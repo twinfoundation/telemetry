@@ -1,5 +1,5 @@
-# @gtsc/telemetry-service - Changelog
+# @twin.org/telemetry-service - Changelog
 
-## v0.0.3
+## v0.0.1-next.3
 
 - Initial Release

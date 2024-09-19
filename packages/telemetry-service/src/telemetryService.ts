@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Guards } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+import { Guards } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import {
 	TelemetryConnectorFactory,
 	type ITelemetryComponent,
@@ -9,7 +9,7 @@ import {
 	type ITelemetryMetric,
 	type ITelemetryMetricValue,
 	type MetricType
-} from "@gtsc/telemetry-models";
+} from "@twin.org/telemetry-models";
 
 /**
  * Service for performing telemetry operations to a connector.
