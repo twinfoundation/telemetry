@@ -135,7 +135,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 			}
 		);
 
-		return result.headers.Location;
+		return result.headers.location;
 	}
 
 	/**
