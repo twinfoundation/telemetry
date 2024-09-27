@@ -24,6 +24,7 @@ import type {
 	ITelemetryValuesListResponse,
 	MetricType
 } from "@twin.org/telemetry-models";
+import { HeaderTypes } from "@twin.org/web";
 
 /**
  * Client for performing telemetry through to REST endpoints.
@@ -135,7 +136,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 			}
 		);
 
-		return result.headers.location;
+		return result.headers[HeaderTypes.Location];
 	}
 
 	/**
