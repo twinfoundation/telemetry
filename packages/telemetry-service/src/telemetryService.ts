@@ -10,6 +10,7 @@ import {
 	type ITelemetryMetricValue,
 	type MetricType
 } from "@twin.org/telemetry-models";
+import type { ITelemetryServiceConstructorOptions } from "./models/ITelemetryServiceConstructorOptions";
 
 /**
  * Service for performing telemetry operations to a connector.
@@ -34,9 +35,8 @@ export class TelemetryService implements ITelemetryComponent {
 	/**
 	 * Create a new instance of TelemetryService.
 	 * @param options The options for the connector.
-	 * @param options.telemetryConnectorType The type of the telemetry connector to use, defaults to "telemetry".
 	 */
-	constructor(options?: { telemetryConnectorType?: string }) {
+	constructor(options?: ITelemetryServiceConstructorOptions) {
 		this._telemetryConnector = TelemetryConnectorFactory.get(
 			options?.telemetryConnectorType ?? "telemetry"
 		);

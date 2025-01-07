@@ -3,6 +3,7 @@
 import { BaseError, Guards, NotImplementedError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { TelemetryConnectorFactory } from "../factories/telemetryConnectorFactory";
+import type { IMultiTelemetryConnectorConstructorOptions } from "../models/IMultiTelemetryConnectorConstructorOptions";
 import type { ITelemetryConnector } from "../models/ITelemetryConnector";
 import type { ITelemetryMetric } from "../models/ITelemetryMetric";
 import type { ITelemetryMetricValue } from "../models/ITelemetryMetricValue";
@@ -26,9 +27,8 @@ export class MultiTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Create a new instance of MultiTelemetryConnector.
 	 * @param options The options for the connector.
-	 * @param options.telemetryConnectorTypes The telemetry connectors to multiplex.
 	 */
-	constructor(options: { telemetryConnectorTypes: string[] }) {
+	constructor(options: IMultiTelemetryConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.arrayValue(
 			this.CLASS_NAME,

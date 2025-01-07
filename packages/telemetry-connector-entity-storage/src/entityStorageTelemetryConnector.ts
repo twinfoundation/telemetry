@@ -29,6 +29,7 @@ import {
 } from "@twin.org/telemetry-models";
 import type { TelemetryMetric } from "./entities/telemetryMetric";
 import type { TelemetryMetricValue } from "./entities/telemetryMetricValue";
+import type { IEntityStorageTelemetryConnectorConstructorOptions } from "./models/IEntityStorageTelemetryConnectorConstructorOptions";
 
 /**
  * Class for performing telemetry operations in entity storage.
@@ -65,15 +66,8 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Create a new instance of EntityStorageTelemetryConnector.
 	 * @param options The options for the connector.
-	 * @param options.telemetryMetricStorageConnectorType The type of the entity storage connector to use, defaults to "telemetry-metric".
-	 * @param options.telemetryMetricValueStorageConnectorType The type of the entity storage connector to use, defaults to "telemetry-metric-value".
-	 * @param options.loggingConnectorType The type of the logging connector to use, can be undefined for no logging.
 	 */
-	constructor(options?: {
-		telemetryMetricStorageConnectorType?: string;
-		telemetryMetricValueStorageConnectorType?: string;
-		loggingConnectorType?: string;
-	}) {
+	constructor(options?: IEntityStorageTelemetryConnectorConstructorOptions) {
 		this._metricStorage = EntityStorageConnectorFactory.get(
 			options?.telemetryMetricStorageConnectorType ?? "telemetry-metric"
 		);
