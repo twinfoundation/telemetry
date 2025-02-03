@@ -3,7 +3,7 @@
 import { entity, property } from "@twin.org/entity";
 
 /**
- * Call defining a telemetry metric value.
+ * Class defining a telemetry metric value.
  */
 @entity()
 export class TelemetryMetricValue {
