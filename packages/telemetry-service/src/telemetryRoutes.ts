@@ -7,7 +7,7 @@ import type {
 	IRestRoute,
 	ITag
 } from "@twin.org/api-models";
-import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
+import { Coerce, ComponentFactory, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import {
 	MetricType,
