@@ -55,7 +55,7 @@ export function generateRestRoutesTelemetry(
 		summary: "Create a telemetry metric",
 		tag: tagsTelemetry[0].name,
 		method: "POST",
-		path: `${baseRouteName}/metric/`,
+		path: `${baseRouteName}/metric`,
 		handler: async (httpRequestContext, request) =>
 			telemetryCreateMetric(httpRequestContext, componentName, request),
 		requestType: {
@@ -259,7 +259,7 @@ export function generateRestRoutesTelemetry(
 		summary: "Get a list of the telemetry metrics",
 		tag: tagsTelemetry[0].name,
 		method: "GET",
-		path: `${baseRouteName}/metric/`,
+		path: `${baseRouteName}/metric`,
 		handler: async (httpRequestContext, request) =>
 			telemetryMetricList(httpRequestContext, componentName, request),
 		requestType: {
@@ -556,7 +556,7 @@ export async function telemetryMetricList(
 	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
 
 	const itemsAndCursor = await component.query(
-		request?.query.type,
+		Coerce.number(request?.query?.type) as MetricType,
 		request?.query?.cursor,
 		Coerce.number(request?.query?.pageSize)
 	);

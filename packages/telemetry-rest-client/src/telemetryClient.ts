@@ -57,7 +57,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 	public async createMetric(metric: ITelemetryMetric): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 
-		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/metric/", "POST", {
+		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/metric", "POST", {
 			body: metric
 		});
 	}
@@ -179,7 +179,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetryCompone
 		cursor?: string;
 	}> {
 		const result = await this.fetch<ITelemetryListRequest, ITelemetryListResponse>(
-			"/metric/",
+			"/metric",
 			"GET",
 			{
 				query: {
