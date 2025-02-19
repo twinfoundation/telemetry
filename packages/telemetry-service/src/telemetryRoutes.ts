@@ -555,11 +555,8 @@ export async function telemetryMetricList(
 
 	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
 
-	if (!Is.undefined(request.query.type)) {
-		request.query.type = Coerce.number(request.query.type) as MetricType;
-	}
 	const itemsAndCursor = await component.query(
-		request?.query.type,
+		Coerce.number(request?.query?.type) as MetricType,
 		request?.query?.cursor,
 		Coerce.number(request?.query?.pageSize)
 	);
