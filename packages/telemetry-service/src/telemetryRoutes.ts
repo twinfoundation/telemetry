@@ -7,7 +7,7 @@ import type {
 	IRestRoute,
 	ITag
 } from "@twin.org/api-models";
-import { Coerce, ComponentFactory, Guards } from "@twin.org/core";
+import { Coerce, ComponentFactory, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import {
 	MetricType,
@@ -55,7 +55,7 @@ export function generateRestRoutesTelemetry(
 		summary: "Create a telemetry metric",
 		tag: tagsTelemetry[0].name,
 		method: "POST",
-		path: `${baseRouteName}/metric/`,
+		path: `${baseRouteName}/metric`,
 		handler: async (httpRequestContext, request) =>
 			telemetryCreateMetric(httpRequestContext, componentName, request),
 		requestType: {
@@ -259,7 +259,7 @@ export function generateRestRoutesTelemetry(
 		summary: "Get a list of the telemetry metrics",
 		tag: tagsTelemetry[0].name,
 		method: "GET",
-		path: `${baseRouteName}/metric/`,
+		path: `${baseRouteName}/metric`,
 		handler: async (httpRequestContext, request) =>
 			telemetryMetricList(httpRequestContext, componentName, request),
 		requestType: {
@@ -555,6 +555,9 @@ export async function telemetryMetricList(
 
 	const component = ComponentFactory.get<ITelemetryComponent>(componentName);
 
+	if (!Is.undefined(request.query.type)) {
+		request.query.type = Coerce.number(request.query.type) as MetricType;
+	}
 	const itemsAndCursor = await component.query(
 		request?.query.type,
 		request?.query?.cursor,
