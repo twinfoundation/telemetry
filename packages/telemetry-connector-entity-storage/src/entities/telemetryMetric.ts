@@ -28,12 +28,12 @@ export class TelemetryMetric {
 	/**
 	 * The unit.
 	 */
-	@property({ type: "string" })
-	public unit!: string;
+	@property({ type: "string", optional: true })
+	public unit?: string;
 
 	/**
 	 * The description.
 	 */
-	@property({ type: "string" })
-	public description!: string;
+	@property({ type: "string", optional: true })
+	public description?: string;
 }
