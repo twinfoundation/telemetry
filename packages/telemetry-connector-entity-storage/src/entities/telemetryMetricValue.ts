@@ -28,7 +28,7 @@ export class TelemetryMetricValue {
 	/**
 	 * The value of the metric.
 	 */
-	@property({ type: "string" })
+	@property({ type: "number" })
 	public value!: number;
 
 	/**
