@@ -16,7 +16,7 @@ export class TelemetryMetric {
 	/**
 	 * The label.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public label!: string;
 
 	/**
