@@ -22,18 +22,18 @@ export class TelemetryMetricValue {
 	/**
 	 * The timestamp.
 	 */
-	@property({ type: "integer" })
+	@property({ type: "integer", format: "uint64" })
 	public ts!: number;
 
 	/**
 	 * The value of the metric.
 	 */
-	@property({ type: "string" })
+	@property({ type: "number" })
 	public value!: number;
 
 	/**
 	 * The custom data for the metric value.
 	 */
-	@property({ type: "object" })
+	@property({ type: "object", optional: true })
 	public customData?: { [key: string]: unknown };
 }
