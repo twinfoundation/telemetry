@@ -22,7 +22,7 @@ export class TelemetryMetricValue {
 	/**
 	 * The timestamp.
 	 */
-	@property({ type: "integer" })
+	@property({ type: "integer", format: "uint64" })
 	public ts!: number;
 
 	/**
