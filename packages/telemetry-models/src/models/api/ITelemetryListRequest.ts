@@ -9,7 +9,7 @@ export interface ITelemetryListRequest {
 	/**
 	 * The query parameters.
 	 */
-	query: {
+	query?: {
 		/**
 		 * The type of the metric.
 		 */
@@ -23,6 +23,6 @@ export interface ITelemetryListRequest {
 		/**
 		 * The maximum number of entities in a page.
 		 */
-		pageSize?: number;
+		pageSize?: number | string;
 	};
 }
