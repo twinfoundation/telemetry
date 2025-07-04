@@ -1,4 +1,4 @@
-# @gtsc/telemetry-rest-client
+# @twin.org/telemetry-rest-client
 
 ## Classes
 

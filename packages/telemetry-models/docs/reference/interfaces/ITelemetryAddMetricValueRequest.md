@@ -1,6 +1,6 @@
-# Interface: ITelemetryUpdateMetricValueRequest
+# Interface: ITelemetryAddMetricValueRequest
 
-Update a telemetry entry.
+Add a telemetry metric value.
 
 ## Properties
 
@@ -29,3 +29,13 @@ The data to be used in the update.
 > **value**: `number` \| `"inc"` \| `"dec"`
 
 The value for the update operation.
+
+#### customData?
+
+> `optional` **customData**: `object`
+
+The custom data for the update operation.
+
+##### Index Signature
+
+\[`key`: `string`\]: `unknown`

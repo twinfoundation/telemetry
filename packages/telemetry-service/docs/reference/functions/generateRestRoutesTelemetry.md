@@ -1,21 +1,25 @@
 # Function: generateRestRoutesTelemetry()
 
-> **generateRestRoutesTelemetry**(`baseRouteName`, `factoryServiceName`): `IRestRoute`[]
+> **generateRestRoutesTelemetry**(`baseRouteName`, `componentName`): `IRestRoute`\<`any`, `any`\>[]
 
 The REST routes for telemetry.
 
 ## Parameters
 
-• **baseRouteName**: `string`
+### baseRouteName
+
+`string`
 
 Prefix to prepend to the paths.
 
-• **factoryServiceName**: `string`
+### componentName
 
-The name of the service to use in the routes store in the ServiceFactory.
+`string`
+
+The name of the component to use in the routes stored in the ComponentFactory.
 
 ## Returns
 
-`IRestRoute`[]
+`IRestRoute`\<`any`, `any`\>[]
 
 The generated routes.

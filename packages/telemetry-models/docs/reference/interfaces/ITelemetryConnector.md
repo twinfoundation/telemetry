@@ -4,121 +4,23 @@ Interface describing a telemetry connector.
 
 ## Extends
 
-- `IService`
-
-## Properties
-
-### CLASS\_NAME
-
-> `readonly` **CLASS\_NAME**: `string`
-
-The name of the service.
-
-#### Inherited from
-
-`IService.CLASS_NAME`
+- `IComponent`
 
 ## Methods
 
-### bootstrap()?
-
-> `optional` **bootstrap**(`systemLoggingConnectorType`?): `Promise`\<`void`\>
-
-Bootstrap the service by creating and initializing any resources it needs.
-
-#### Parameters
-
-• **systemLoggingConnectorType?**: `string`
-
-The system logging connector type, defaults to "system-logging".
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Inherited from
-
-`IService.bootstrap`
-
-***
-
-### start()?
-
-> `optional` **start**(`systemRequestContext`, `systemLoggingConnectorType`?): `Promise`\<`void`\>
-
-The service needs to be started when the application is initialized.
-
-#### Parameters
-
-• **systemRequestContext**: `IServiceRequestContext`
-
-The system request context.
-
-• **systemLoggingConnectorType?**: `string`
-
-The system logging connector type, defaults to "system-logging".
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Inherited from
-
-`IService.start`
-
-***
-
-### stop()?
-
-> `optional` **stop**(`systemRequestContext`, `systemLoggingConnectorType`?): `Promise`\<`void`\>
-
-The service needs to be stopped when the application is closed.
-
-#### Parameters
-
-• **systemRequestContext**: `IServiceRequestContext`
-
-The system request context.
-
-• **systemLoggingConnectorType?**: `string`
-
-The system logging connector type, defaults to "system-logging".
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Inherited from
-
-`IService.stop`
-
-***
-
 ### createMetric()
 
-> **createMetric**(`metric`, `initialValue`?, `requestContext`?): `Promise`\<`void`\>
+> **createMetric**(`metric`): `Promise`\<`void`\>
 
 Create a new metric.
 
 #### Parameters
 
-• **metric**: [`ITelemetryMetric`](ITelemetryMetric.md)
+##### metric
+
+[`ITelemetryMetric`](ITelemetryMetric.md)
 
 The metric details.
-
-• **initialValue?**: `number`
-
-The initial value of the metric.
-
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
 
 #### Returns
 
@@ -130,51 +32,39 @@ Nothing.
 
 ### getMetric()
 
-> **getMetric**(`id`, `requestContext`?): `Promise`\<`object`\>
+> **getMetric**(`id`): `Promise`\<\{ `metric`: [`ITelemetryMetric`](ITelemetryMetric.md); `value`: [`ITelemetryMetricValue`](ITelemetryMetricValue.md); \}\>
 
 Get the metric details and it's most recent value.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The metric id.
 
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
-
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `metric`: [`ITelemetryMetric`](ITelemetryMetric.md); `value`: [`ITelemetryMetricValue`](ITelemetryMetricValue.md); \}\>
 
 The metric details and it's most recent value.
-
-##### metric
-
-> **metric**: [`ITelemetryMetric`](ITelemetryMetric.md)
-
-##### value
-
-> **value**: [`ITelemetryMetricValue`](ITelemetryMetricValue.md)
 
 ***
 
 ### updateMetric()
 
-> **updateMetric**(`metric`, `requestContext`?): `Promise`\<`void`\>
+> **updateMetric**(`metric`): `Promise`\<`void`\>
 
 Update metric.
 
 #### Parameters
 
-• **metric**: `Omit`\<[`ITelemetryMetric`](ITelemetryMetric.md), `"type"`\>
+##### metric
+
+`Omit`\<[`ITelemetryMetric`](ITelemetryMetric.md), `"type"`\>
 
 The metric details.
-
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
 
 #### Returns
 
@@ -184,49 +74,51 @@ Nothing.
 
 ***
 
-### updateMetricValue()
+### addMetricValue()
 
-> **updateMetricValue**(`id`, `value`, `requestContext`?): `Promise`\<`void`\>
+> **addMetricValue**(`id`, `value`, `customData?`): `Promise`\<`string`\>
 
 Update metric value.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
-• **value**: `number` \| `"inc"` \| `"dec"`
+##### value
 
 The value for the update operation.
 
-• **requestContext?**: `IServiceRequestContext`
+`number` | `"inc"` | `"dec"`
 
-The context for the request.
+##### customData?
+
+The custom data for the update operation.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`string`\>
 
-Nothing.
+The created metric value id.
 
 ***
 
 ### removeMetric()
 
-> **removeMetric**(`id`, `requestContext`?): `Promise`\<`void`\>
+> **removeMetric**(`id`): `Promise`\<`void`\>
 
 Remove metric.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
-
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
 
 #### Returns
 
@@ -238,58 +130,36 @@ Nothing.
 
 ### query()
 
-> **query**(`type`?, `cursor`?, `pageSize`?, `requestContext`?): `Promise`\<`object`\>
+> **query**(`type?`, `cursor?`, `pageSize?`): `Promise`\<\{ `entities`: [`ITelemetryMetric`](ITelemetryMetric.md)[]; `cursor?`: `string`; \}\>
 
 Query the metrics.
 
 #### Parameters
 
-• **type?**: [`MetricType`](../type-aliases/MetricType.md)
+##### type?
+
+[`MetricType`](../type-aliases/MetricType.md)
 
 The type of the metric.
 
-• **cursor?**: `string`
+##### cursor?
+
+`string`
 
 The cursor to request the next page of entities.
 
-• **pageSize?**: `number`
+##### pageSize?
+
+`number`
 
 The maximum number of entities in a page.
 
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
-
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `entities`: [`ITelemetryMetric`](ITelemetryMetric.md)[]; `cursor?`: `string`; \}\>
 
 All the entities for the storage matching the conditions,
 and a cursor which can be used to request more entities.
-
-##### entities
-
-> **entities**: [`ITelemetryMetric`](ITelemetryMetric.md)[]
-
-The metrics.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
 
 #### Throws
 
@@ -299,72 +169,48 @@ NotImplementedError if the implementation does not support retrieval.
 
 ### queryValues()
 
-> **queryValues**(`id`, `timeStart`?, `timeEnd`?, `cursor`?, `pageSize`?, `requestContext`?): `Promise`\<`object`\>
+> **queryValues**(`id`, `timeStart?`, `timeEnd?`, `cursor?`, `pageSize?`): `Promise`\<\{ `metric`: [`ITelemetryMetric`](ITelemetryMetric.md); `entities`: [`ITelemetryMetricValue`](ITelemetryMetricValue.md)[]; `cursor?`: `string`; \}\>
 
 Query the metric values.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
-• **timeStart?**: `number`
+##### timeStart?
+
+`number`
 
 The inclusive time as the start of the metric entries.
 
-• **timeEnd?**: `number`
+##### timeEnd?
+
+`number`
 
 The inclusive time as the end of the metric entries.
 
-• **cursor?**: `string`
+##### cursor?
+
+`string`
 
 The cursor to request the next page of entities.
 
-• **pageSize?**: `number`
+##### pageSize?
+
+`number`
 
 The maximum number of entities in a page.
 
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
-
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `metric`: [`ITelemetryMetric`](ITelemetryMetric.md); `entities`: [`ITelemetryMetricValue`](ITelemetryMetricValue.md)[]; `cursor?`: `string`; \}\>
 
 All the entities for the storage matching the conditions,
 and a cursor which can be used to request more entities.
-
-##### metric
-
-> **metric**: [`ITelemetryMetric`](ITelemetryMetric.md)
-
-The metric details.
-
-##### entities
-
-> **entities**: [`ITelemetryMetricValue`](ITelemetryMetricValue.md)[]
-
-The values for the metric.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
 
 #### Throws
 

@@ -6,6 +6,11 @@
  */
 export interface ITelemetryMetricValue {
 	/**
+	 * The id of the metric value.
+	 */
+	id: string;
+
+	/**
 	 * The timestamp of the metric.
 	 */
 	ts: number;
@@ -14,4 +19,9 @@ export interface ITelemetryMetricValue {
 	 * The value of the metric.
 	 */
 	value: number;
+
+	/**
+	 * The custom data for the metric value.
+	 */
+	customData?: { [key: string]: unknown };
 }

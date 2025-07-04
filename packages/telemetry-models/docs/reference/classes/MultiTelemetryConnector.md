@@ -8,25 +8,23 @@ Class for performing telemetry operations on multiple connectors.
 
 ## Constructors
 
-### new MultiTelemetryConnector()
+### Constructor
 
-> **new MultiTelemetryConnector**(`options`): [`MultiTelemetryConnector`](MultiTelemetryConnector.md)
+> **new MultiTelemetryConnector**(`options`): `MultiTelemetryConnector`
 
 Create a new instance of MultiTelemetryConnector.
 
 #### Parameters
 
-• **options**
+##### options
+
+[`IMultiTelemetryConnectorConstructorOptions`](../interfaces/IMultiTelemetryConnectorConstructorOptions.md)
 
 The options for the connector.
 
-• **options.telemetryConnectorTypes**: `string`[]
-
-The telemetry connectors to multiplex.
-
 #### Returns
 
-[`MultiTelemetryConnector`](MultiTelemetryConnector.md)
+`MultiTelemetryConnector`
 
 ## Properties
 
@@ -38,37 +36,23 @@ Runtime name for the class.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`CLASS_NAME`](../interfaces/ITelemetryConnector.md#class_name)
-
-***
-
-### \_telemetryConnectors
-
-> `private` `readonly` **\_telemetryConnectors**: [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md)[]
-
-The connectors to send the telemetry entries to.
+`ITelemetryConnector.CLASS_NAME`
 
 ## Methods
 
 ### createMetric()
 
-> **createMetric**(`metric`, `initialValue`?, `requestContext`?): `Promise`\<`void`\>
+> **createMetric**(`metric`): `Promise`\<`void`\>
 
 Create a new metric.
 
 #### Parameters
 
-• **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
+##### metric
+
+[`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
 
 The metric details.
-
-• **initialValue?**: `number`
-
-The initial value of the metric.
-
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
 
 #### Returns
 
@@ -84,33 +68,23 @@ Nothing.
 
 ### getMetric()
 
-> **getMetric**(`id`, `requestContext`?): `Promise`\<`object`\>
+> **getMetric**(`id`): `Promise`\<\{ `metric`: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md); `value`: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md); \}\>
 
 Get the metric details and it's most recent value.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The metric id.
 
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
-
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `metric`: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md); `value`: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md); \}\>
 
 The metric details and it's most recent value.
-
-##### metric
-
-> **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
-
-##### value
-
-> **value**: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md)
 
 #### Implementation of
 
@@ -120,19 +94,17 @@ The metric details and it's most recent value.
 
 ### updateMetric()
 
-> **updateMetric**(`metric`, `requestContext`?): `Promise`\<`void`\>
+> **updateMetric**(`metric`): `Promise`\<`void`\>
 
 Update metric.
 
 #### Parameters
 
-• **metric**: `Omit`\<[`ITelemetryMetric`](../interfaces/ITelemetryMetric.md), `"type"`\>
+##### metric
+
+`Omit`\<[`ITelemetryMetric`](../interfaces/ITelemetryMetric.md), `"type"`\>
 
 The metric details.
-
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
 
 #### Returns
 
@@ -146,53 +118,55 @@ Nothing.
 
 ***
 
-### updateMetricValue()
+### addMetricValue()
 
-> **updateMetricValue**(`id`, `value`, `requestContext`?): `Promise`\<`void`\>
+> **addMetricValue**(`id`, `value`, `customData?`): `Promise`\<`string`\>
 
-Update metric value.
+Add a metric value.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
-• **value**: `number` \| `"inc"` \| `"dec"`
+##### value
 
-The value for the update operation.
+The value for the add operation.
 
-• **requestContext?**: `IServiceRequestContext`
+`number` | `"inc"` | `"dec"`
 
-The context for the request.
+##### customData?
+
+The custom data for the add operation.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`string`\>
 
-Nothing.
+The created metric value id.
 
 #### Implementation of
 
-[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`updateMetricValue`](../interfaces/ITelemetryConnector.md#updatemetricvalue)
+[`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`addMetricValue`](../interfaces/ITelemetryConnector.md#addmetricvalue)
 
 ***
 
 ### removeMetric()
 
-> **removeMetric**(`id`, `requestContext`?): `Promise`\<`void`\>
+> **removeMetric**(`id`): `Promise`\<`void`\>
 
 Remove metric.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
-
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
 
 #### Returns
 
@@ -208,142 +182,96 @@ Nothing.
 
 ### query()
 
-> **query**(`type`?, `cursor`?, `pageSize`?, `requestContext`?): `Promise`\<`object`\>
+> **query**(`type?`, `cursor?`, `pageSize?`): `Promise`\<\{ `entities`: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)[]; `cursor?`: `string`; \}\>
 
 Query the metrics.
 
 #### Parameters
 
-• **type?**: [`MetricType`](../type-aliases/MetricType.md)
+##### type?
+
+[`MetricType`](../type-aliases/MetricType.md)
 
 The type of the metric.
 
-• **cursor?**: `string`
+##### cursor?
+
+`string`
 
 The cursor to request the next page of entities.
 
-• **pageSize?**: `number`
+##### pageSize?
+
+`number`
 
 The maximum number of entities in a page.
 
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
-
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `entities`: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)[]; `cursor?`: `string`; \}\>
 
 All the entities for the storage matching the conditions,
 and a cursor which can be used to request more entities.
 
-##### entities
+#### Throws
 
-> **entities**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)[]
-
-The metrics.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
+NotImplementedError if the implementation does not support retrieval.
 
 #### Implementation of
 
 [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`query`](../interfaces/ITelemetryConnector.md#query)
 
-#### Throws
-
-NotImplementedError if the implementation does not support retrieval.
-
 ***
 
 ### queryValues()
 
-> **queryValues**(`id`, `timeStart`?, `timeEnd`?, `cursor`?, `pageSize`?, `requestContext`?): `Promise`\<`object`\>
+> **queryValues**(`id`, `timeStart?`, `timeEnd?`, `cursor?`, `pageSize?`): `Promise`\<\{ `metric`: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md); `entities`: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md)[]; `cursor?`: `string`; \}\>
 
 Query the metric values.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
-• **timeStart?**: `number`
+##### timeStart?
+
+`number`
 
 The inclusive time as the start of the metric entries.
 
-• **timeEnd?**: `number`
+##### timeEnd?
+
+`number`
 
 The inclusive time as the end of the metric entries.
 
-• **cursor?**: `string`
+##### cursor?
+
+`string`
 
 The cursor to request the next page of entities.
 
-• **pageSize?**: `number`
+##### pageSize?
+
+`number`
 
 The maximum number of entities in a page.
 
-• **requestContext?**: `IServiceRequestContext`
-
-The context for the request.
-
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `metric`: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md); `entities`: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md)[]; `cursor?`: `string`; \}\>
 
 All the entities for the storage matching the conditions,
 and a cursor which can be used to request more entities.
 
-##### metric
+#### Throws
 
-> **metric**: [`ITelemetryMetric`](../interfaces/ITelemetryMetric.md)
-
-The metric details.
-
-##### entities
-
-> **entities**: [`ITelemetryMetricValue`](../interfaces/ITelemetryMetricValue.md)[]
-
-The values for the metric.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
+NotImplementedError if the implementation does not support retrieval.
 
 #### Implementation of
 
 [`ITelemetryConnector`](../interfaces/ITelemetryConnector.md).[`queryValues`](../interfaces/ITelemetryConnector.md#queryvalues)
-
-#### Throws
-
-NotImplementedError if the implementation does not support retrieval.

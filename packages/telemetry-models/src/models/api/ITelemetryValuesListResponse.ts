@@ -25,15 +25,5 @@ export interface ITelemetryValuesListResponse {
 		 * An optional cursor, when defined can be used to call find to get more entities.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of entities to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total number of metric values length.
-		 */
-		totalEntities: number;
 	};
 }

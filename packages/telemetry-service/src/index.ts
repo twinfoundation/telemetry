@@ -3,3 +3,4 @@
 export * from "./telemetryRoutes";
 export * from "./telemetryService";
 export * from "./restEntryPoints";
+export * from "./models/ITelemetryServiceConstructorOptions";

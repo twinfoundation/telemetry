@@ -1,20 +1,26 @@
 # Function: telemetryGetMetric()
 
-> **telemetryGetMetric**(`requestContext`, `factoryServiceName`, `request`): `Promise`\<`ITelemetryGetMetricResponse`\>
+> **telemetryGetMetric**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`ITelemetryGetMetricResponse`\>
 
 Gets a telemetry metric.
 
 ## Parameters
 
-• **requestContext**: `IServiceRequestContext`
+### httpRequestContext
+
+`IHttpRequestContext`
 
 The request context for the API.
 
-• **factoryServiceName**: `string`
+### componentName
 
-The name of the service to use in the routes.
+`string`
 
-• **request**: `ITelemetryGetMetricRequest`
+The name of the component to use in the routes.
+
+### request
+
+`ITelemetryGetMetricRequest`
 
 The request.
 

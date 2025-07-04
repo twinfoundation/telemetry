@@ -1,12 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { entity, property } from "@gtsc/entity";
+import { entity, property } from "@twin.org/entity";
 
 /**
- * Call defining a telemetry metric entry.
+ * Class defining a telemetry metric.
  */
 @entity()
-export class TelemetryMetricEntry {
+export class TelemetryMetric {
 	/**
 	 * The id.
 	 */
@@ -16,7 +16,7 @@ export class TelemetryMetricEntry {
 	/**
 	 * The label.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public label!: string;
 
 	/**
@@ -28,12 +28,12 @@ export class TelemetryMetricEntry {
 	/**
 	 * The unit.
 	 */
-	@property({ type: "string" })
-	public unit!: string;
+	@property({ type: "string", optional: true })
+	public unit?: string;
 
 	/**
 	 * The description.
 	 */
-	@property({ type: "string" })
-	public description!: string;
+	@property({ type: "string", optional: true })
+	public description?: string;
 }

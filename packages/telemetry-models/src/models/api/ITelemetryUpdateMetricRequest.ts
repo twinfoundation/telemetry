@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Update a telemetry entry.
+ * Update a telemetry metric.
  */
 export interface ITelemetryUpdateMetricRequest {
 	/**

@@ -8,25 +8,27 @@ Client for performing telemetry through to REST endpoints.
 
 ## Implements
 
-- `ITelemetry`
+- `ITelemetryComponent`
 
 ## Constructors
 
-### new TelemetryClient()
+### Constructor
 
-> **new TelemetryClient**(`config`): [`TelemetryClient`](TelemetryClient.md)
+> **new TelemetryClient**(`config`): `TelemetryClient`
 
 Create a new instance of TelemetryClient.
 
 #### Parameters
 
-• **config**: `IBaseRestClientConfig`
+##### config
+
+`IBaseRestClientConfig`
 
 The configuration for the client.
 
 #### Returns
 
-[`TelemetryClient`](TelemetryClient.md)
+`TelemetryClient`
 
 #### Overrides
 
@@ -42,81 +44,23 @@ Runtime name for the class.
 
 #### Implementation of
 
-`ITelemetry.CLASS_NAME`
+`ITelemetryComponent.CLASS_NAME`
 
 ## Methods
 
-### getEndpointWithPrefix()
-
-> **getEndpointWithPrefix**(): `string`
-
-Get the endpoint with the prefix for the namespace.
-
-#### Returns
-
-`string`
-
-The endpoint with namespace prefix attached.
-
-#### Inherited from
-
-`BaseRestClient.getEndpointWithPrefix`
-
-***
-
-### fetch()
-
-> **fetch**\<`T`, `U`\>(`route`, `method`, `request`?): `Promise`\<`U`\>
-
-Perform a request in json format.
-
-#### Type parameters
-
-• **T** *extends* `IHttpRequest`\<`any`\>
-
-• **U** *extends* `IHttpResponse`\<`any`\>
-
-#### Parameters
-
-• **route**: `string`
-
-The route of the request.
-
-• **method**: `HttpMethod`
-
-The http method.
-
-• **request?**: `T`
-
-Request to send to the endpoint.
-
-#### Returns
-
-`Promise`\<`U`\>
-
-The response.
-
-#### Inherited from
-
-`BaseRestClient.fetch`
-
-***
-
 ### createMetric()
 
-> **createMetric**(`metric`, `initialValue`?): `Promise`\<`void`\>
+> **createMetric**(`metric`): `Promise`\<`void`\>
 
 Create a new metric.
 
 #### Parameters
 
-• **metric**: `ITelemetryMetric`
+##### metric
+
+`ITelemetryMetric`
 
 The metric details.
-
-• **initialValue?**: `number`
-
-The initial value of the metric.
 
 #### Returns
 
@@ -126,39 +70,33 @@ Nothing.
 
 #### Implementation of
 
-`ITelemetry.createMetric`
+`ITelemetryComponent.createMetric`
 
 ***
 
 ### getMetric()
 
-> **getMetric**(`id`): `Promise`\<`object`\>
+> **getMetric**(`id`): `Promise`\<\{ `metric`: `ITelemetryMetric`; `value`: `ITelemetryMetricValue`; \}\>
 
 Get the metric details and it's most recent value.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The metric id.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `metric`: `ITelemetryMetric`; `value`: `ITelemetryMetricValue`; \}\>
 
 The metric details and it's most recent value.
 
-##### metric
-
-> **metric**: `ITelemetryMetric`
-
-##### value
-
-> **value**: `ITelemetryMetricValue`
-
 #### Implementation of
 
-`ITelemetry.getMetric`
+`ITelemetryComponent.getMetric`
 
 ***
 
@@ -170,7 +108,9 @@ Update metric.
 
 #### Parameters
 
-• **metric**: `Omit`\<`ITelemetryMetric`, `"type"`\>
+##### metric
+
+`Omit`\<`ITelemetryMetric`, `"type"`\>
 
 The metric details.
 
@@ -182,35 +122,43 @@ Nothing.
 
 #### Implementation of
 
-`ITelemetry.updateMetric`
+`ITelemetryComponent.updateMetric`
 
 ***
 
-### updateMetricValue()
+### addMetricValue()
 
-> **updateMetricValue**(`id`, `value`): `Promise`\<`void`\>
+> **addMetricValue**(`id`, `value`, `customData?`): `Promise`\<`string`\>
 
-Update metric value.
+Add a metric value.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
-• **value**: `number` \| `"inc"` \| `"dec"`
+##### value
 
-The value for the update operation.
+The value for the add operation.
+
+`number` | `"inc"` | `"dec"`
+
+##### customData?
+
+The custom data for the add operation.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`string`\>
 
-Nothing.
+The created metric value id.
 
 #### Implementation of
 
-`ITelemetry.updateMetricValue`
+`ITelemetryComponent.addMetricValue`
 
 ***
 
@@ -222,7 +170,9 @@ Remove metric.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
@@ -234,140 +184,102 @@ Nothing.
 
 #### Implementation of
 
-`ITelemetry.removeMetric`
+`ITelemetryComponent.removeMetric`
 
 ***
 
 ### query()
 
-> **query**(`type`?, `cursor`?, `pageSize`?): `Promise`\<`object`\>
+> **query**(`type?`, `cursor?`, `pageSize?`): `Promise`\<\{ `entities`: `ITelemetryMetric`[]; `cursor?`: `string`; \}\>
 
 Query the metrics.
 
 #### Parameters
 
-• **type?**: `MetricType`
+##### type?
+
+`MetricType`
 
 The type of the metric.
 
-• **cursor?**: `string`
+##### cursor?
+
+`string`
 
 The cursor to request the next page of entities.
 
-• **pageSize?**: `number`
+##### pageSize?
+
+`number`
 
 The maximum number of entities in a page.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `entities`: `ITelemetryMetric`[]; `cursor?`: `string`; \}\>
 
 All the entities for the storage matching the conditions,
 and a cursor which can be used to request more entities.
 
-##### entities
-
-> **entities**: `ITelemetryMetric`[]
-
-The metrics.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
-
-#### Implementation of
-
-`ITelemetry.query`
-
 #### Throws
 
 NotImplementedError if the implementation does not support retrieval.
+
+#### Implementation of
+
+`ITelemetryComponent.query`
 
 ***
 
 ### queryValues()
 
-> **queryValues**(`id`, `timeStart`?, `timeEnd`?, `cursor`?, `pageSize`?): `Promise`\<`object`\>
+> **queryValues**(`id`, `timeStart?`, `timeEnd?`, `cursor?`, `pageSize?`): `Promise`\<\{ `metric`: `ITelemetryMetric`; `entities`: `ITelemetryMetricValue`[]; `cursor?`: `string`; \}\>
 
 Query the metric values.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the metric.
 
-• **timeStart?**: `number`
+##### timeStart?
+
+`number`
 
 The inclusive time as the start of the metric entries.
 
-• **timeEnd?**: `number`
+##### timeEnd?
+
+`number`
 
 The inclusive time as the end of the metric entries.
 
-• **cursor?**: `string`
+##### cursor?
+
+`string`
 
 The cursor to request the next page of entities.
 
-• **pageSize?**: `number`
+##### pageSize?
+
+`number`
 
 The maximum number of entities in a page.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `metric`: `ITelemetryMetric`; `entities`: `ITelemetryMetricValue`[]; `cursor?`: `string`; \}\>
 
 All the entities for the storage matching the conditions,
 and a cursor which can be used to request more entities.
 
-##### metric
-
-> **metric**: `ITelemetryMetric`
-
-The metric details.
-
-##### entities
-
-> **entities**: `ITelemetryMetricValue`[]
-
-The values for the metric.
-
-##### cursor?
-
-> `optional` **cursor**: `string`
-
-An optional cursor, when defined can be used to call find to get more values.
-
-##### pageSize?
-
-> `optional` **pageSize**: `number`
-
-Number of values to return.
-
-##### totalEntities
-
-> **totalEntities**: `number`
-
-Total entities length.
-
-#### Implementation of
-
-`ITelemetry.queryValues`
-
 #### Throws
 
 NotImplementedError if the implementation does not support retrieval.
+
+#### Implementation of
+
+`ITelemetryComponent.queryValues`

@@ -4,7 +4,7 @@ import type { ITelemetryMetric } from "../ITelemetryMetric";
 import type { ITelemetryMetricValue } from "../ITelemetryMetricValue";
 
 /**
- * Get a telemetry entry response.
+ * Get a telemetry metric response.
  */
 export interface ITelemetryGetMetricResponse {
 	/**

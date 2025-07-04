@@ -1,20 +1,26 @@
 # Function: telemetryUpdateMetric()
 
-> **telemetryUpdateMetric**(`requestContext`, `factoryServiceName`, `request`): `Promise`\<`INoContentResponse`\>
+> **telemetryUpdateMetric**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`INoContentResponse`\>
 
 Updates a telemetry metric.
 
 ## Parameters
 
-• **requestContext**: `IServiceRequestContext`
+### httpRequestContext
+
+`IHttpRequestContext`
 
 The request context for the API.
 
-• **factoryServiceName**: `string`
+### componentName
 
-The name of the service to use in the routes.
+`string`
 
-• **request**: `ITelemetryUpdateMetricRequest`
+The name of the component to use in the routes.
+
+### request
+
+`ITelemetryUpdateMetricRequest`
 
 The request.
 

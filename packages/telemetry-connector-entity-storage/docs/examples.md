@@ -1,1 +1,1 @@
-# @gtsc/telemetry-connector-entity-storage - Examples
+# @twin.org/telemetry-connector-entity-storage - Examples

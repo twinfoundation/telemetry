@@ -9,17 +9,17 @@ export const MetricType = {
 	/**
 	 * Counter.
 	 */
-	Counter: "Counter",
+	Counter: 0,
 
 	/**
 	 * Increment Decrement Counter.
 	 */
-	IncDecCounter: "IncDecCounter",
+	IncDecCounter: 1,
 
 	/**
 	 * Gauge.
 	 */
-	Gauge: "Gauge"
+	Gauge: 2
 } as const;
 
 /**

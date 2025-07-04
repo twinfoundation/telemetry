@@ -1,4 +1,4 @@
-# @gtsc/telemetry-models
+# @twin.org/telemetry-models
 
 ## Classes
 
@@ -7,10 +7,12 @@
 
 ## Interfaces
 
-- [ITelemetry](interfaces/ITelemetry.md)
+- [IMultiTelemetryConnectorConstructorOptions](interfaces/IMultiTelemetryConnectorConstructorOptions.md)
+- [ITelemetryComponent](interfaces/ITelemetryComponent.md)
 - [ITelemetryConnector](interfaces/ITelemetryConnector.md)
 - [ITelemetryMetric](interfaces/ITelemetryMetric.md)
 - [ITelemetryMetricValue](interfaces/ITelemetryMetricValue.md)
+- [ITelemetryAddMetricValueRequest](interfaces/ITelemetryAddMetricValueRequest.md)
 - [ITelemetryCreateMetricRequest](interfaces/ITelemetryCreateMetricRequest.md)
 - [ITelemetryGetMetricRequest](interfaces/ITelemetryGetMetricRequest.md)
 - [ITelemetryGetMetricResponse](interfaces/ITelemetryGetMetricResponse.md)
@@ -18,7 +20,6 @@
 - [ITelemetryListResponse](interfaces/ITelemetryListResponse.md)
 - [ITelemetryRemoveMetricRequest](interfaces/ITelemetryRemoveMetricRequest.md)
 - [ITelemetryUpdateMetricRequest](interfaces/ITelemetryUpdateMetricRequest.md)
-- [ITelemetryUpdateMetricValueRequest](interfaces/ITelemetryUpdateMetricValueRequest.md)
 - [ITelemetryValuesListRequest](interfaces/ITelemetryValuesListRequest.md)
 - [ITelemetryValuesListResponse](interfaces/ITelemetryValuesListResponse.md)
 

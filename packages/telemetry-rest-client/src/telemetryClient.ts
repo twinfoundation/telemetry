@@ -1,11 +1,16 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseRestClient } from "@gtsc/api-core";
-import type { IBaseRestClientConfig, ICreatedResponse, INoContentResponse } from "@gtsc/api-models";
-import { Guards, StringHelper } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+import { BaseRestClient } from "@twin.org/api-core";
 import type {
-	ITelemetry,
+	IBaseRestClientConfig,
+	ICreatedResponse,
+	INoContentResponse
+} from "@twin.org/api-models";
+import { Guards } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
+import type {
+	ITelemetryAddMetricValueRequest,
+	ITelemetryComponent,
 	ITelemetryCreateMetricRequest,
 	ITelemetryGetMetricRequest,
 	ITelemetryGetMetricResponse,
@@ -15,16 +20,16 @@ import type {
 	ITelemetryMetricValue,
 	ITelemetryRemoveMetricRequest,
 	ITelemetryUpdateMetricRequest,
-	ITelemetryUpdateMetricValueRequest,
 	ITelemetryValuesListRequest,
 	ITelemetryValuesListResponse,
 	MetricType
-} from "@gtsc/telemetry-models";
+} from "@twin.org/telemetry-models";
+import { HeaderTypes } from "@twin.org/web";
 
 /**
  * Client for performing telemetry through to REST endpoints.
  */
-export class TelemetryClient extends BaseRestClient implements ITelemetry {
+export class TelemetryClient extends BaseRestClient implements ITelemetryComponent {
 	/**
 	 * Runtime name for the class.
 	 * @internal
@@ -41,23 +46,19 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(TelemetryClient._CLASS_NAME, config, StringHelper.kebabCase(nameof<ITelemetry>()));
+		super(TelemetryClient._CLASS_NAME, config, "telemetry");
 	}
 
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
 	 * @returns Nothing.
 	 */
-	public async createMetric(metric: ITelemetryMetric, initialValue?: number): Promise<void> {
+	public async createMetric(metric: ITelemetryMetric): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 
-		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/", "POST", {
-			body: {
-				...metric,
-				initialValue
-			}
+		await this.fetch<ITelemetryCreateMetricRequest, ICreatedResponse>("/metric", "POST", {
+			body: metric
 		});
 	}
 
@@ -73,7 +74,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const result = await this.fetch<ITelemetryGetMetricRequest, ITelemetryGetMetricResponse>(
-			"/:id",
+			"/metric/:id",
 			"GET",
 			{
 				pathParams: {
@@ -94,7 +95,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.id), metric.id);
 
-		await this.fetch<ITelemetryUpdateMetricRequest, INoContentResponse>("/:id", "PUT", {
+		await this.fetch<ITelemetryUpdateMetricRequest, INoContentResponse>("/metric/:id", "PUT", {
 			pathParams: {
 				id: metric.id
 			},
@@ -107,23 +108,35 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	}
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
-	 * @returns Nothing.
+	 * @param value The value for the add operation.
+	 * @param customData The custom data for the add operation.
+	 * @returns The created metric value id.
 	 */
-	public async updateMetricValue(id: string, value: "inc" | "dec" | number): Promise<void> {
+	public async addMetricValue(
+		id: string,
+		value: "inc" | "dec" | number,
+		customData?: { [key: string]: unknown }
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 		Guards.defined(this.CLASS_NAME, nameof(value), value);
 
-		await this.fetch<ITelemetryUpdateMetricValueRequest, INoContentResponse>("/:id/value", "PUT", {
-			pathParams: {
-				id
-			},
-			body: {
-				value
+		const result = await this.fetch<ITelemetryAddMetricValueRequest, ICreatedResponse>(
+			"/metric/:id/value",
+			"POST",
+			{
+				pathParams: {
+					id
+				},
+				body: {
+					value,
+					customData
+				}
 			}
-		});
+		);
+
+		return result.headers[HeaderTypes.Location];
 	}
 
 	/**
@@ -134,7 +147,7 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 	public async removeMetric(id: string): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
-		await this.fetch<ITelemetryRemoveMetricRequest, INoContentResponse>("/:id", "DELETE", {
+		await this.fetch<ITelemetryRemoveMetricRequest, INoContentResponse>("/metric/:id", "DELETE", {
 			pathParams: {
 				id
 			}
@@ -164,24 +177,18 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
-		const result = await this.fetch<ITelemetryListRequest, ITelemetryListResponse>("/", "GET", {
-			query: {
-				type,
-				cursor,
-				pageSize
+		const result = await this.fetch<ITelemetryListRequest, ITelemetryListResponse>(
+			"/metric",
+			"GET",
+			{
+				query: {
+					type,
+					cursor,
+					pageSize
+				}
 			}
-		});
+		);
 
 		return result.body;
 	}
@@ -216,19 +223,11 @@ export class TelemetryClient extends BaseRestClient implements ITelemetry {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const result = await this.fetch<ITelemetryValuesListRequest, ITelemetryValuesListResponse>(
-			"/:id/values",
+			"/metric/:id/value",
 			"GET",
 			{
 				pathParams: {

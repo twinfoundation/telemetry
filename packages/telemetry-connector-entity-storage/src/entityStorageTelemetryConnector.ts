@@ -8,49 +8,54 @@ import {
 	Is,
 	NotFoundError,
 	RandomHelper
-} from "@gtsc/core";
+} from "@twin.org/core";
 import {
 	ComparisonOperator,
+	type EntityCondition,
 	LogicalOperator,
-	SortDirection,
-	type EntityCondition
-} from "@gtsc/entity";
+	SortDirection
+} from "@twin.org/entity";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@gtsc/entity-storage-models";
-import { type ILoggingConnector, LoggingConnectorFactory } from "@gtsc/logging-models";
-import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
+} from "@twin.org/entity-storage-models";
+import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
+import { nameof } from "@twin.org/nameof";
 import {
 	type ITelemetryConnector,
 	type ITelemetryMetric,
 	type ITelemetryMetricValue,
 	MetricType
-} from "@gtsc/telemetry-models";
-import type { TelemetryMetricEntry } from "./entities/telemetryMetricEntry";
-import type { TelemetryMetricValueEntry } from "./entities/telemetryMetricValueEntry";
+} from "@twin.org/telemetry-models";
+import type { TelemetryMetric } from "./entities/telemetryMetric";
+import type { TelemetryMetricValue } from "./entities/telemetryMetricValue";
+import type { IEntityStorageTelemetryConnectorConstructorOptions } from "./models/IEntityStorageTelemetryConnectorConstructorOptions";
 
 /**
  * Class for performing telemetry operations in entity storage.
  */
 export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	/**
+	 * The namespace supported by the telemetry connector.
+	 */
+	public static readonly NAMESPACE: string = "entity-storage";
+
+	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<EntityStorageTelemetryConnector>();
 
 	/**
-	 * The entity storage for the telemetry entries.
+	 * The entity storage for the telemetry metrics.
 	 * @internal
 	 */
-	private readonly _metricStorage: IEntityStorageConnector<TelemetryMetricEntry>;
+	private readonly _metricStorage: IEntityStorageConnector<TelemetryMetric>;
 
 	/**
-	 * The entity storage for the telemetry entry values.
+	 * The entity storage for the telemetry metric values.
 	 * @internal
 	 */
-	private readonly _metricValueStorage: IEntityStorageConnector<TelemetryMetricValueEntry>;
+	private readonly _metricValueStorage: IEntityStorageConnector<TelemetryMetricValue>;
 
 	/**
 	 * The connector for logging.
@@ -61,15 +66,8 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Create a new instance of EntityStorageTelemetryConnector.
 	 * @param options The options for the connector.
-	 * @param options.telemetryMetricStorageConnectorType The type of the entity storage connector to use, defaults to "telemetry-metric".
-	 * @param options.telemetryMetricValueStorageConnectorType The type of the entity storage connector to use, defaults to "telemetry-metric-value".
-	 * @param options.loggingConnectorType The type of the logging connector to use, can be undefined for no logging.
 	 */
-	constructor(options?: {
-		telemetryMetricStorageConnectorType?: string;
-		telemetryMetricValueStorageConnectorType?: string;
-		loggingConnectorType?: string;
-	}) {
+	constructor(options?: IEntityStorageTelemetryConnectorConstructorOptions) {
 		this._metricStorage = EntityStorageConnectorFactory.get(
 			options?.telemetryMetricStorageConnectorType ?? "telemetry-metric"
 		);
@@ -78,22 +76,16 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		);
 
 		if (Is.stringValue(options?.loggingConnectorType)) {
-			this._loggingConnector = LoggingConnectorFactory.getIfExists(options.loggingConnectorType);
+			this._loggingConnector = LoggingConnectorFactory.get(options.loggingConnectorType);
 		}
 	}
 
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async createMetric(
-		metric: ITelemetryMetric,
-		initialValue?: number,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	public async createMetric(metric: ITelemetryMetric): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.id), metric.id);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.label), metric.label);
@@ -106,53 +98,39 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			Guards.string(this.CLASS_NAME, nameof(metric.unit), metric.unit);
 		}
 
-		if (Is.notEmpty(initialValue)) {
-			if (metric.type === MetricType.Counter || metric.type === MetricType.IncDecCounter) {
-				Guards.integer(this.CLASS_NAME, nameof(initialValue), initialValue);
-			} else {
-				Guards.number(this.CLASS_NAME, nameof(initialValue), initialValue);
-			}
-		}
-
-		const existingMetric = await this._metricStorage.get(metric.id, undefined, requestContext);
+		const existingMetric = await this._metricStorage.get(metric.id);
 		if (Is.notEmpty(existingMetric)) {
 			throw new AlreadyExistsError(this.CLASS_NAME, "metricAlreadyExists", metric.id);
 		}
 
-		const entry: TelemetryMetricEntry = {
+		const telemetryMetric: TelemetryMetric = {
 			id: metric.id,
 			label: metric.label,
-			type: Object.values(MetricType).indexOf(metric.type),
+			type: metric.type,
 			unit: metric.unit ?? "",
 			description: metric.description ?? ""
 		};
 
-		await this._metricStorage.set(entry, requestContext);
+		await this._metricStorage.set(telemetryMetric);
 
-		const entryValue: TelemetryMetricValueEntry = {
-			id: Converter.bytesToHex(RandomHelper.generate(16)),
-			metricId: metric.id,
-			ts: Date.now(),
-			value: initialValue ?? 0
-		};
-
-		await this._metricValueStorage.set(entryValue, requestContext);
+		await this._loggingConnector?.log({
+			source: this.CLASS_NAME,
+			message: "metricCreated",
+			level: "info",
+			data: { id: metric.id, type: metric.type, label: metric.label }
+		});
 	}
 
 	/**
 	 * Get the metric details and it's most recent value.
 	 * @param id The metric id.
-	 * @param requestContext The context for the request.
 	 * @returns The metric details and it's most recent value.
 	 */
-	public async getMetric(
-		id: string,
-		requestContext?: IServiceRequestContext
-	): Promise<{
+	public async getMetric(id: string): Promise<{
 		metric: ITelemetryMetric;
 		value: ITelemetryMetricValue;
 	}> {
-		const metrics = await this.queryValues(id, undefined, undefined, undefined, 1, requestContext);
+		const metrics = await this.queryValues(id, undefined, undefined, undefined, 1);
 		return {
 			metric: metrics.metric,
 			value: metrics.entities[0]
@@ -162,13 +140,9 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Update metric.
 	 * @param metric The metric details.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async updateMetric(
-		metric: Omit<ITelemetryMetric, "type">,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {
+	public async updateMetric(metric: Omit<ITelemetryMetric, "type">): Promise<void> {
 		Guards.object<ITelemetryMetric>(this.CLASS_NAME, nameof(metric), metric);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.id), metric.id);
 		Guards.stringValue(this.CLASS_NAME, nameof(metric.label), metric.label);
@@ -179,12 +153,12 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			Guards.string(this.CLASS_NAME, nameof(metric.unit), metric.unit);
 		}
 
-		const existingMetric = await this._metricStorage.get(metric.id, undefined, requestContext);
+		const existingMetric = await this._metricStorage.get(metric.id);
 		if (Is.undefined(existingMetric)) {
 			throw new NotFoundError(this.CLASS_NAME, "metricNotFound", metric.id);
 		}
 
-		const entry: TelemetryMetricEntry = {
+		const telemetryMetric: TelemetryMetric = {
 			id: metric.id,
 			label: metric.label,
 			type: existingMetric.type,
@@ -192,30 +166,37 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			description: metric.description ?? existingMetric.description
 		};
 
-		await this._metricStorage.set(entry, requestContext);
+		await this._metricStorage.set(telemetryMetric);
+
+		await this._loggingConnector?.log({
+			source: this.CLASS_NAME,
+			message: "metricUpdated",
+			level: "info",
+			data: { id: metric.id, type: metric.type, label: metric.label }
+		});
 	}
 
 	/**
-	 * Update metric value.
+	 * Add a metric value.
 	 * @param id The id of the metric.
-	 * @param value The value for the update operation.
-	 * @param requestContext The context for the request.
+	 * @param value The value for the add operation.
+	 * @param customData The custom data for the metric value.
 	 * @returns Nothing.
 	 */
-	public async updateMetricValue(
+	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {
+		customData?: { [key: string]: unknown }
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
-		const existingMetric = await this._metricStorage.get(id, undefined, requestContext);
+		const existingMetric = await this._metricStorage.get(id);
 		if (Is.undefined(existingMetric)) {
 			throw new NotFoundError(this.CLASS_NAME, "metricNotFound", id);
 		}
 
 		const existingMetricValue = await this._metricValueStorage.query(
-			{ property: "metricId", operator: ComparisonOperator.Equals, value: id },
+			{ property: "metricId", comparison: ComparisonOperator.Equals, value: id },
 			[
 				{
 					property: "ts",
@@ -224,80 +205,96 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			],
 			undefined,
 			undefined,
-			1,
-			requestContext
+			1
 		);
 
-		if (!Is.arrayValue(existingMetricValue.entities)) {
-			throw new NotFoundError(this.CLASS_NAME, "metricValueNotFound", id);
-		}
+		const lastMetric = existingMetricValue.entities[0];
+		let newValue = Is.notEmpty(lastMetric) ? (lastMetric.value as number) : 0;
 
-		let lastEntryValue = existingMetricValue.entities[0].value as number;
-
-		const type = Object.values(MetricType)[existingMetric.type];
-		if (type === MetricType.Counter) {
+		if (existingMetric.type === MetricType.Counter) {
 			if (value === "inc") {
-				lastEntryValue++;
+				newValue++;
+			} else if (Is.integer(value) && value > 0) {
+				newValue += value;
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "counterIncOnly");
 			}
-		} else if (type === MetricType.IncDecCounter) {
+		} else if (existingMetric.type === MetricType.IncDecCounter) {
 			if (value === "inc") {
-				lastEntryValue++;
+				newValue++;
 			} else if (value === "dec") {
-				lastEntryValue--;
+				newValue--;
+			} else if (Is.integer(value)) {
+				newValue += value;
 			} else {
 				throw new GeneralError(this.CLASS_NAME, "upDownCounterIncOrDecOnly");
 			}
 		} else if (Is.number(value)) {
-			lastEntryValue = value;
+			newValue = value;
 		} else {
 			throw new GeneralError(this.CLASS_NAME, "gaugeNoIncDec");
 		}
 
-		const entryValue: TelemetryMetricValueEntry = {
+		const telemetryMetricValue: TelemetryMetricValue = {
 			id: Converter.bytesToHex(RandomHelper.generate(16)),
 			metricId: id,
 			ts: Date.now(),
-			value: lastEntryValue
+			value: newValue,
+			customData
 		};
 
-		await this._metricValueStorage.set(entryValue, requestContext);
+		await this._metricValueStorage.set(telemetryMetricValue);
+
+		await this._loggingConnector?.log({
+			source: this.CLASS_NAME,
+			message: "metricValueCreated",
+			level: "info",
+			data: { id, value: newValue }
+		});
+
+		return telemetryMetricValue.id;
 	}
 
 	/**
 	 * Remove metric.
 	 * @param id The id of the metric.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async removeMetric(id: string, requestContext?: IServiceRequestContext): Promise<void> {
+	public async removeMetric(id: string): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
-		const existingMetric = await this._metricStorage.get(id, undefined, requestContext);
+		const existingMetric = await this._metricStorage.get(id);
 		if (Is.undefined(existingMetric)) {
 			throw new NotFoundError(this.CLASS_NAME, "metricNotFound", id);
 		}
 
-		await this._metricStorage.remove(id, requestContext);
+		await this._metricStorage.remove(id);
 
-		let remainingCount = 0;
+		let existingMetricValuesResult;
 		do {
-			const existingMetricValues = await this._metricValueStorage.query(
-				{ property: "metricId", operator: ComparisonOperator.Equals, value: id },
+			existingMetricValuesResult = await this._metricValueStorage.query(
+				{
+					property: "metricId",
+					comparison: ComparisonOperator.Equals,
+					value: id
+				},
 				undefined,
 				undefined,
-				undefined,
-				undefined,
-				requestContext
+				existingMetricValuesResult?.cursor
 			);
 			await Promise.allSettled(
-				existingMetricValues.entities.map(async entry => {
-					this._metricValueStorage.remove((entry as TelemetryMetricValueEntry).id, requestContext);
+				existingMetricValuesResult.entities.map(async telemetryMetricValue => {
+					this._metricValueStorage.remove((telemetryMetricValue as TelemetryMetricValue).id);
 				})
 			);
-			remainingCount = existingMetricValues.totalEntities;
-		} while (remainingCount > 0);
+		} while (Is.stringValue(existingMetricValuesResult.cursor));
+
+		await this._loggingConnector?.log({
+			source: this.CLASS_NAME,
+			message: "metricRemoved",
+			level: "info",
+			data: { id }
+		});
 	}
 
 	/**
@@ -305,7 +302,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	 * @param type The type of the metric.
 	 * @param cursor The cursor to request the next page of entities.
 	 * @param pageSize The maximum number of entities in a page.
-	 * @param requestContext The context for the request.
 	 * @returns All the entities for the storage matching the conditions,
 	 * and a cursor which can be used to request more entities.
 	 * @throws NotImplementedError if the implementation does not support retrieval.
@@ -313,8 +309,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	public async query(
 		type?: MetricType,
 		cursor?: string,
-		pageSize?: number,
-		requestContext?: IServiceRequestContext
+		pageSize?: number
 	): Promise<{
 		/**
 		 * The metrics.
@@ -325,33 +320,19 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
-		const metricTypes: MetricType[] = Object.values(MetricType);
-
-		const condition: EntityCondition<TelemetryMetricEntry> = {
+		const condition: EntityCondition<TelemetryMetric> = {
 			conditions: [],
 			logicalOperator: LogicalOperator.And
 		};
 
-		if (Is.stringValue(type) && Is.arrayOneOf(type, metricTypes)) {
+		if (Is.arrayOneOf(type, Object.values(MetricType))) {
 			condition.conditions.push({
 				property: "type",
-				operator: ComparisonOperator.Equals,
-				value: metricTypes.indexOf(type)
+				comparison: ComparisonOperator.Equals,
+				value: type
 			});
 		}
-
-		console.log(condition);
 
 		const result = await this._metricStorage.query(
 			condition.conditions.length > 0 ? condition : undefined,
@@ -363,23 +344,12 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			],
 			undefined,
 			cursor,
-			pageSize,
-			requestContext
+			pageSize
 		);
 
-		console.log(result);
-
 		return {
-			entities: result.entities.map(
-				t =>
-					({
-						...t,
-						type: metricTypes[t.type as number]
-					}) as ITelemetryMetric
-			),
-			cursor: result.cursor,
-			pageSize: result.pageSize,
-			totalEntities: result.totalEntities
+			entities: result.entities as ITelemetryMetric[],
+			cursor: result.cursor
 		};
 	}
 
@@ -390,7 +360,6 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	 * @param timeEnd The inclusive time as the end of the metric entries.
 	 * @param cursor The cursor to request the next page of entities.
 	 * @param pageSize The maximum number of entities in a page.
-	 * @param requestContext The context for the request.
 	 * @returns All the entities for the storage matching the conditions,
 	 * and a cursor which can be used to request more entities.
 	 * @throws NotImplementedError if the implementation does not support retrieval.
@@ -400,8 +369,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		timeStart?: number,
 		timeEnd?: number,
 		cursor?: string,
-		pageSize?: number,
-		requestContext?: IServiceRequestContext
+		pageSize?: number
 	): Promise<{
 		/**
 		 * The metric details.
@@ -417,39 +385,29 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
-		const existingMetric = await this._metricStorage.get(id, undefined, requestContext);
+		const existingMetric = await this._metricStorage.get(id);
 		if (Is.undefined(existingMetric)) {
 			throw new NotFoundError(this.CLASS_NAME, "metricNotFound", id);
 		}
 
-		const condition: EntityCondition<TelemetryMetricValueEntry> = {
+		const condition: EntityCondition<TelemetryMetricValue> = {
 			conditions: [],
 			logicalOperator: LogicalOperator.And
 		};
 
 		condition.conditions.push({
 			property: "metricId",
-			operator: ComparisonOperator.Equals,
+			comparison: ComparisonOperator.Equals,
 			value: id
 		});
 
 		if (Is.number(timeStart)) {
 			condition.conditions.push({
 				property: "ts",
-				operator: ComparisonOperator.GreaterThanOrEqual,
+				comparison: ComparisonOperator.GreaterThanOrEqual,
 				value: timeStart
 			});
 		}
@@ -457,7 +415,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 		if (Is.number(timeEnd)) {
 			condition.conditions.push({
 				property: "ts",
-				operator: ComparisonOperator.LessThanOrEqual,
+				comparison: ComparisonOperator.LessThanOrEqual,
 				value: timeEnd
 			});
 		}
@@ -472,21 +430,13 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			],
 			undefined,
 			cursor,
-			pageSize,
-			requestContext
+			pageSize
 		);
 
-		const types: MetricType[] = Object.values(MetricType);
-
 		return {
-			metric: {
-				...existingMetric,
-				type: types[existingMetric.type as number]
-			},
-			entities: result.entities as TelemetryMetricValueEntry[],
-			cursor: result.cursor,
-			pageSize: result.pageSize,
-			totalEntities: result.totalEntities
+			metric: existingMetric as ITelemetryMetric,
+			entities: result.entities as ITelemetryMetricValue[],
+			cursor: result.cursor
 		};
 	}
 }

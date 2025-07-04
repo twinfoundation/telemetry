@@ -4,9 +4,17 @@
 			"metricNotFound": "The metric could not be found \"{notFoundId}\"",
 			"metricAlreadyExists": "The metric already exists \"{existingId}\"",
 			"metricValueNotFound": "The metric value could not be found \"{notFoundId}\"",
-			"counterIncOnly": "A counter metric can only be incremented",
-			"upDownCounterIncOrDecOnly": "An up/down counter metric can only be incremented or decremented",
+			"counterIncOnly": "A counter metric can only be incremented, or added to with an integer",
+			"upDownCounterIncOrDecOnly": "An up/down counter metric can only be incremented, decremented or adjusted with an integer",
 			"gaugeNoIncDec": "A gauge can not be incremented or decremented"
+		}
+	},
+	"info": {
+		"entityStorageTelemetryConnector": {
+			"metricCreated": "The metric was created \"{id}\" with type \"type\" and label \"{label}\"",
+			"metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
+			"metricRemoved": "The metric was removed \"{id}\"",
+			"metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
 		}
 	}
 }

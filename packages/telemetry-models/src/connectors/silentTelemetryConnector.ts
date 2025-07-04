@@ -1,8 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { NotSupportedError } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
+import { NotSupportedError } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import type { ITelemetryConnector } from "../models/ITelemetryConnector";
 import type { ITelemetryMetric } from "../models/ITelemetryMetric";
 import type { ITelemetryMetricValue } from "../models/ITelemetryMetricValue";
@@ -20,26 +19,16 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Create a new metric.
 	 * @param metric The metric details.
-	 * @param initialValue The initial value of the metric.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async createMetric(
-		metric: ITelemetryMetric,
-		initialValue?: number,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {}
+	public async createMetric(metric: ITelemetryMetric): Promise<void> {}
 
 	/**
 	 * Get the metric details and it's most recent value.
 	 * @param id The metric id.
-	 * @param requestContext The context for the request.
 	 * @returns The metric details and it's most recent value.
 	 */
-	public async getMetric(
-		id: string,
-		requestContext?: IServiceRequestContext
-	): Promise<{
+	public async getMetric(id: string): Promise<{
 		metric: ITelemetryMetric;
 		value: ITelemetryMetricValue;
 	}> {
@@ -49,41 +38,37 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 	/**
 	 * Update metric.
 	 * @param metric The metric details.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async updateMetric(
-		metric: Omit<ITelemetryMetric, "type">,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {}
+	public async updateMetric(metric: Omit<ITelemetryMetric, "type">): Promise<void> {}
 
 	/**
 	 * Update metric value.
 	 * @param id The id of the metric.
 	 * @param value The value for the update operation.
-	 * @param requestContext The context for the request.
-	 * @returns Nothing.
+	 * @param customData The custom data for the update operation.
+	 * @returns The created metric value id..
 	 */
-	public async updateMetricValue(
+	public async addMetricValue(
 		id: string,
 		value: "inc" | "dec" | number,
-		requestContext?: IServiceRequestContext
-	): Promise<void> {}
+		customData?: { [key: string]: unknown }
+	): Promise<string> {
+		return "";
+	}
 
 	/**
 	 * Remove metric.
 	 * @param id The id of the metric.
-	 * @param requestContext The context for the request.
 	 * @returns Nothing.
 	 */
-	public async removeMetric(id: string, requestContext?: IServiceRequestContext): Promise<void> {}
+	public async removeMetric(id: string): Promise<void> {}
 
 	/**
 	 * Query the metrics.
 	 * @param type The type of the metric.
 	 * @param cursor The cursor to request the next page of entities.
 	 * @param pageSize The maximum number of entities in a page.
-	 * @param requestContext The context for the request.
 	 * @returns All the entities for the storage matching the conditions,
 	 * and a cursor which can be used to request more entities.
 	 * @throws NotImplementedError if the implementation does not support retrieval.
@@ -91,8 +76,7 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 	public async query(
 		type?: MetricType,
 		cursor?: string,
-		pageSize?: number,
-		requestContext?: IServiceRequestContext
+		pageSize?: number
 	): Promise<{
 		/**
 		 * The metrics.
@@ -103,16 +87,6 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		throw new NotSupportedError(this.CLASS_NAME, "query");
 	}
@@ -124,7 +98,6 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 	 * @param timeEnd The inclusive time as the end of the metric entries.
 	 * @param cursor The cursor to request the next page of entities.
 	 * @param pageSize The maximum number of entities in a page.
-	 * @param requestContext The context for the request.
 	 * @returns All the entities for the storage matching the conditions,
 	 * and a cursor which can be used to request more entities.
 	 * @throws NotImplementedError if the implementation does not support retrieval.
@@ -134,8 +107,7 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 		timeStart?: number,
 		timeEnd?: number,
 		cursor?: string,
-		pageSize?: number,
-		requestContext?: IServiceRequestContext
+		pageSize?: number
 	): Promise<{
 		/**
 		 * The metric details.
@@ -151,16 +123,6 @@ export class SilentTelemetryConnector implements ITelemetryConnector {
 		 * An optional cursor, when defined can be used to call find to get more values.
 		 */
 		cursor?: string;
-
-		/**
-		 * Number of values to return.
-		 */
-		pageSize?: number;
-
-		/**
-		 * Total entities length.
-		 */
-		totalEntities: number;
 	}> {
 		throw new NotSupportedError(this.CLASS_NAME, "queryValues");
 	}

@@ -22,12 +22,12 @@ export interface ITelemetryValuesListRequest {
 		/**
 		 * The start time of the metrics to retrieve as a timestamp in ms.
 		 */
-		timeStart?: number;
+		timeStart?: number | string;
 
 		/**
 		 * The end time of the metrics to retrieve as a timestamp in ms.
 		 */
-		timeEnd?: number;
+		timeEnd?: number | string;
 
 		/**
 		 * The optional cursor to get next chunk.
@@ -37,6 +37,6 @@ export interface ITelemetryValuesListRequest {
 		/**
 		 * The maximum number of entities in a page.
 		 */
-		pageSize?: number;
+		pageSize?: number | string;
 	};
 }
