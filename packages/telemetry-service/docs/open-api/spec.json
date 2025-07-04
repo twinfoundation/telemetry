@@ -962,10 +962,12 @@
 				"properties": {
 					"entities": {
 						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/TelemetryMetric"
-						},
-						"description": "The metrics."
+						"description": "The metrics.",
+						"prefixItems": [
+							{
+								"$ref": "#/components/schemas/TelemetryMetric"
+							}
+						]
 					},
 					"cursor": {
 						"type": "string",
@@ -1068,10 +1070,12 @@
 					},
 					"entities": {
 						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/TelemetryMetricValue"
-						},
-						"description": "The metric values."
+						"description": "The metric values.",
+						"prefixItems": [
+							{
+								"$ref": "#/components/schemas/TelemetryMetricValue"
+							}
+						]
 					},
 					"cursor": {
 						"type": "string",
