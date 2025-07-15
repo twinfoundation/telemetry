@@ -962,6 +962,7 @@
 				"properties": {
 					"entities": {
 						"type": "array",
+						"items": false,
 						"description": "The metrics.",
 						"prefixItems": [
 							{
@@ -1070,6 +1071,7 @@
 					},
 					"entities": {
 						"type": "array",
+						"items": false,
 						"description": "The metric values.",
 						"prefixItems": [
 							{
