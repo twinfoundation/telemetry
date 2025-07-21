@@ -17,11 +17,6 @@ import type { ITelemetryServiceConstructorOptions } from "./models/ITelemetrySer
  */
 export class TelemetryService implements ITelemetryComponent {
 	/**
-	 * The namespace supported by the telemetry service.
-	 */
-	public static readonly NAMESPACE: string = "telemetry";
-
-	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<TelemetryService>();
