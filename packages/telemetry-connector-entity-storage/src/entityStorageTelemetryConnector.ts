@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	AlreadyExistsError,
+	ComponentFactory,
 	Converter,
 	GeneralError,
 	Guards,
@@ -19,7 +20,7 @@ import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
-import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
+import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import {
 	type ITelemetryConnector,
@@ -58,10 +59,10 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 	private readonly _metricValueStorage: IEntityStorageConnector<TelemetryMetricValue>;
 
 	/**
-	 * The connector for logging.
+	 * The component for logging.
 	 * @internal
 	 */
-	private readonly _loggingConnector?: ILoggingConnector;
+	private readonly _logging?: ILoggingComponent;
 
 	/**
 	 * Create a new instance of EntityStorageTelemetryConnector.
@@ -75,9 +76,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			options?.telemetryMetricValueStorageConnectorType ?? "telemetry-metric-value"
 		);
 
-		if (Is.stringValue(options?.loggingConnectorType)) {
-			this._loggingConnector = LoggingConnectorFactory.get(options.loggingConnectorType);
-		}
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
 	}
 
 	/**
@@ -113,7 +112,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 
 		await this._metricStorage.set(telemetryMetric);
 
-		await this._loggingConnector?.log({
+		await this._logging?.log({
 			source: this.CLASS_NAME,
 			message: "metricCreated",
 			level: "info",
@@ -168,7 +167,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 
 		await this._metricStorage.set(telemetryMetric);
 
-		await this._loggingConnector?.log({
+		await this._logging?.log({
 			source: this.CLASS_NAME,
 			message: "metricUpdated",
 			level: "info",
@@ -245,7 +244,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 
 		await this._metricValueStorage.set(telemetryMetricValue);
 
-		await this._loggingConnector?.log({
+		await this._logging?.log({
 			source: this.CLASS_NAME,
 			message: "metricValueCreated",
 			level: "info",
@@ -289,7 +288,7 @@ export class EntityStorageTelemetryConnector implements ITelemetryConnector {
 			);
 		} while (Is.stringValue(existingMetricValuesResult.cursor));
 
-		await this._loggingConnector?.log({
+		await this._logging?.log({
 			source: this.CLASS_NAME,
 			message: "metricRemoved",
 			level: "info",
